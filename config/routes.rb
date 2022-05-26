@@ -4,9 +4,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
 
-  root "welcome#index"
+  root "tweets#index"
 
-  get "/welcome", to: "welcome#index"
+  get "/welcome", to: "tweets#index"
   get "/about", to: "welcome#about"
 
   resources :users
