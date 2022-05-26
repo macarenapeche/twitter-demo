@@ -19,6 +19,8 @@
   <p>
   <%= tweet.content %></br>
   <%= tweet.created_at %>
+  <%= button_to "Edit", edit_tweet_path(tweet), method: :get,form: {style: 'display:inline-block;'}%>
+  <%= button_to "Delete", tweet_path(tweet), method: :delete, form: {style: 'display:inline-block;'} %>
   </p>
 <% end %>
 

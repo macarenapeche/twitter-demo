@@ -1,9 +1,9 @@
 <h1>Edit Tweet</h1>
 
-<% if @user.errors.any? %>
-  <p> The user couldn't be updated due to the following errors: 
+<% if @tweet.errors.any? %>
+  <p> The tweet couldn't be updated due to the following errors: 
     <ul>
-      <% @user.errors.full_messages.each do |message| %>
+      <% @tweet.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
     </ul>
