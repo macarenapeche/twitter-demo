@@ -28,7 +28,7 @@ class TweetsController < ApplicationController
 
   def update
     if @tweet.update(tweet_params)
-      redirect_to @tweet
+      redirect_to user_path(@tweet.user)
     else
       render 'edit'
     end
