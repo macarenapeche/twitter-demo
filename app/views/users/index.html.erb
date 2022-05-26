@@ -1,0 +1,29 @@
+<h1>Twitter Users</h1>
+
+<div>
+  <table>
+    <thead>
+      <th><b>Handle</b></th>
+      <th colspan="3"><b>Actions</b></th>
+    </thead>
+    <tbody>
+      <% User.all.each do |user| %>
+        <tr>
+          <td>@<%= user.handle %> </td>
+          <td>
+            <%= button_to "View", user_path(user), method: :get, form: {style: 'display:inline-block;'} %> 
+            <%= button_to "Edit", edit_user_path(user), method: :get,form: {style: 'display:inline-block;'} %>
+            <%= button_to "Delete", user_path(user), method: :delete, form: {style: 'display:inline-block;'} %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<p><%= button_to "Add User", new_user_path, method: :get %> </p>
+
+<p>
+<%= link_to "Home", root_path %> |
+<%= link_to "About", about_path %>
+</p>

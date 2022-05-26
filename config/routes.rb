@@ -7,4 +7,7 @@ Rails.application.routes.draw do
   root "welcome#index"
 
   get "/welcome", to: "welcome#index"
+  get "/about", to: "welcome#about"
+
+  resources :users
 end
