@@ -1,5 +1,6 @@
 <h1>Welcome to Twitter</h1>
 
+<p><%= button_to "Create User", new_user_path, method: :get %> </p>
 <p><%= button_to "Create Tweet", new_tweet_path, method: :get %> </p>
 
 <% Tweet.all.reverse_each do |tweet| %>
@@ -11,5 +12,6 @@
 <% end %>
 
 <p>
+<%= link_to "List of users", users_path %> | 
 <%= link_to "About", about_path %>
 </p>
