@@ -1,0 +1,25 @@
+<h1>Edit Tweet</h1>
+
+<% if @user.errors.any? %>
+  <p> The user couldn't be updated due to the following errors: 
+    <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </p>
+<% end %>
+
+<p>
+<%= form_with model: @tweet do |form| %>
+  <%= form.label :user_id, "UserID:" %></br>
+  <%= form.text_field :user_id %></br></br>
+
+  <%= form.label :content, "Content:" %></br>
+  <%= form.text_area :content, size: "40x10" %></br></br>
+
+  <%= form.submit %>
+<% end %>
+</p>
+
+<p><%= link_to "Back", tweets_path %></p>

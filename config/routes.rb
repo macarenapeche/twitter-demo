@@ -10,4 +10,6 @@ Rails.application.routes.draw do
   get "/about", to: "welcome#about"
 
   resources :users
+  resources :tweets
+  
 end
