@@ -1,0 +1,11 @@
+<h1>@<%= @user.handle %> Followers</h1>
+
+<ul>
+  <% @user.followers.each do |index| %>
+    <li>@<%= User.find(index.follower_id).handle %>
+    <%= button_to "Remove", user_follow_path(@user, index), method: :delete, form: {style: 'display:inline-block;'} %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "Back", users_path(@user) %> 

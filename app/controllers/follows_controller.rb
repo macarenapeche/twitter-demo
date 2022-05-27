@@ -1,12 +1,13 @@
 class FollowsController < ApplicationController
+  
   before_action :get_user
-  before_action :set_follower, only: [:destroy]
 
   def index
-    @followers = @user.followers.all
+    @follows = @user.followers
   end
 
   def show
+    @follower = @user.find(params[:id])
   end
 
   def new
@@ -14,18 +15,18 @@ class FollowsController < ApplicationController
   end
 
   def create
-    @follower = @user.followers.build(params.require(:follower).permit(:user_id, :follower_id))
+    @follower = @user.followers.build(params.require(:follow).permit(:follower_id))
     if @follower.save
-      redirect_to user_followers_path(@user)
+      redirect_to user_follows_path(@user)
     else 
       render "new"
     end
   end 
 
   def destroy
-    @follower = @user.followers.find(params[:id])
+    @follower = Follow.find(params[:id])
     @follower.destroy
-    redirect_to user_followers_path(@user),  status: :see_other
+    redirect_to user_follows_path(@user),  status: :see_other
   end
   
   private 
