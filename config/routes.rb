@@ -9,7 +9,10 @@ Rails.application.routes.draw do
   get "/welcome", to: "tweets#index"
   get "/about", to: "welcome#about"
 
-  resources :users
+  resources :users do
+    resources :followers, only: [:index, :destroy]
+    resources :following, only: [:index, :new, :destroy]
+  end
   resources :tweets do
     resources :likes, only: [:index, :new, :destroy]
   end

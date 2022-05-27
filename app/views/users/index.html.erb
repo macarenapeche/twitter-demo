@@ -11,6 +11,7 @@
         <tr>
           <td>@<%= user.handle %> </td>
           <td>
+            <%= button_to "Follow", new_user_path(user), method: :get, form: {style: 'display:inline-block;'} %> 
             <%= button_to "View", user_path(user), method: :get, form: {style: 'display:inline-block;'} %> 
             <%= button_to "Edit", edit_user_path(user), method: :get,form: {style: 'display:inline-block;'} %>
             <%= button_to "Delete", user_path(user), method: :delete, form: {style: 'display:inline-block;'} %>
