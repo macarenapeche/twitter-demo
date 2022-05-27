@@ -1,0 +1,11 @@
+<h1>Start following @<%= @user.handle %></h1>
+
+<% form_with(model: [@user, @follower], local: true) do |form| %>
+  <%= form.label :follower_id, "UserID:" %></br>
+  <%= form.text_field :follower_id %></br></br>
+
+  <%= form.submit %>
+
+<% end %>
+
+<%= link_to 'Back', user_followers_path(@user) %>
