@@ -1,26 +1,14 @@
 <h1>Tweet Details</h1>
 
 <p>
-  <%= button_to "Edit tweet", edit_tweet_path(@tweet), method: :get,form: {style: 'display:inline-block;'}%>
-  <%= button_to "Delete tweet", tweet_path(@tweet), method: :delete, form: {style: 'display:inline-block;'} %>
+<b><%= @tweet.user.name %></b> @<%= @tweet.user.handle %></br>
+<%= @tweet.content %></br>
+<%= @tweet.created_at %>
 </p>
 
 <p>
-<b>Name:</b> <%= @tweet.name %> </br>
-<b>Handle:</b> @<%= @tweet.handle %> </br>
-<b>Email:</b> <%= @tweet.email %> </br>
-<b>Bio:</b> <%= @tweet.bio %>
+  <%= button_to "Edit", edit_tweet_path(@tweet), method: :get,form: {style: 'display:inline-block;'}%>
+  <%= button_to "Delete", tweet_path(@tweet), method: :delete, form: {style: 'display:inline-block;'} %>
 </p>
-
-
-<h2><%= @tweet.name %> Tweets </h2>
-
-<% @tweet.tweets.reverse_each do |tweet| %>
-  <p>
-  <%= tweet.content %></br>
-  <%= tweet.created_at %>
-  </p>
-<% end %>
-
 
 <p><%= link_to "Back to Tweets", tweets_path %></p>

@@ -1,0 +1,11 @@
+<h1>Likes</h1>
+
+<ul>
+  <% @tweet.likes.each do |like| %>
+    <li>@<%= like.user.handle %>
+    <%= button_to "Remove", tweet_likes_path(@tweet), method: :delete, form: {style: 'display:inline-block;'} %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "Back", tweets_path %> 
