@@ -1,4 +1,4 @@
-class FollowersController < ApplicationController
+class FollowsController < ApplicationController
   before_action :get_user
   before_action :set_follower, only: [:destroy]
 

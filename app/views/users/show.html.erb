@@ -12,6 +12,10 @@
 <b>Bio:</b> <%= @user.bio %>
 </p>
 
+<p>
+  <%= button_to "Followers", edit_user_path(@user), method: :get,form: {style: 'display:inline-block;'}%>
+</p>
+
 
 <h2><%= @user.name %> Tweets </h2>
 

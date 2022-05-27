@@ -17,7 +17,7 @@ class LikesController < ApplicationController
   def create
     @like = @tweet.likes.build(likes_params)
     if @like.save
-      redirect to tweet_likes_path(@tweet)
+      redirect_to tweets_path
     else 
       render "new"
     end
