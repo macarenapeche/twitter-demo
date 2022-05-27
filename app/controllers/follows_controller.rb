@@ -6,6 +6,9 @@ class FollowsController < ApplicationController
     @followers = @user.followers.all
   end
 
+  def show
+  end
+
   def new
     @follower = @user.followers.build
   end

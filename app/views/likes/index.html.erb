@@ -3,7 +3,7 @@
 <ul>
   <% @tweet.likes.each do |like| %>
     <li>@<%= like.user.handle %>
-    <%= button_to "Remove", tweet_likes_path(@tweet), method: :delete, form: {style: 'display:inline-block;'} %>
+    <%= button_to "Remove", tweet_like_path(@tweet, like), method: :delete, form: {style: 'display:inline-block;'} %>
     </li>
   <% end %>
 </ul>
