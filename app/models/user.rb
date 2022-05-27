@@ -8,4 +8,7 @@ class User < ApplicationRecord
   
   has_many :tweets, dependent: :destroy
   has_many :likes, dependent: :destroy
+
+  has_many :followers, class_name: "Follow", foreign_key: "following_id"
+  has_many :following, class_name: "Follow", foreign_key: "user_id"
 end
