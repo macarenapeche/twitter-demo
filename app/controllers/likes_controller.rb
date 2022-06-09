@@ -11,6 +11,7 @@ class LikesController < ApplicationController
   end
 
   def new
+    @user_options = User.all.map{ |u| [ u.handle, u.id ] }
     @like = @tweet.likes.build
   end
 

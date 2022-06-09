@@ -9,10 +9,12 @@ class TweetsController < ApplicationController
   end
 
   def new
+    @user_options = User.all.map{ |u| [ u.handle, u.id ] }
     @tweet = Tweet.new
   end
 
   def edit
+    @user_options = User.all.map{ |u| [ u.handle, u.id ] }
   end
 
 

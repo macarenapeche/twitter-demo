@@ -12,9 +12,9 @@
 
 <p>
 <%= form_with model: @tweet do |form| %>
-  <%= form.label :user_id, "UserID:" %></br>
-  <%= form.text_field :user_id %></br></br>
-
+  Author: 
+  <%= select(:tweet, :user_id, @user_options) %>
+  </br></br>
   <%= form.label :content, "Content:" %></br>
   <%= form.text_area :content, size: "40x10" %></br></br>
 
