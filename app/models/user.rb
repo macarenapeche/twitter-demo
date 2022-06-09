@@ -4,6 +4,7 @@ class User < ApplicationRecord
   validates :handle, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true
   validates_format_of :email, with: URI::MailTo::EMAIL_REGEXP
+  validates_format_of :handle, with: /\A[\w\d_-]+\z/
 
   
   has_many :tweets, dependent: :destroy
