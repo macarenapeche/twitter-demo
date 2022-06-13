@@ -3,21 +3,22 @@ class FollowsController < ApplicationController
   before_action :get_user
 
   def index
-    @follows = @user.followers
+    @followers = @user.followers
   end
 
   def show
-    @follower = @user.find(params[:id])
+    @follower = User.find(params[:id])
   end
 
   def new
+    @user_options = User.all.map{ |u| [ u.handle, u.id ] }
     @follower = @user.followers.build
   end
 
   def create
     @follower = @user.followers.build(params.require(:follow).permit(:follower_id))
     if @follower.save
-      redirect_to user_follows_path(@user)
+      redirect_to @user
     else 
       render "new"
     end
