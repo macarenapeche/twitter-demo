@@ -10,10 +10,18 @@ Rails.application.routes.draw do
   get "/about", to: "welcome#about"
 
   resources :users do
-    resources :follows, only: [:index, :show, :new, :create, :destroy]
+    resources :follows
   end
   resources :tweets do
-    resources :likes, only: [:index, :show, :new, :create, :destroy]
+    resources :likes, only: [:index, :new, :create, :destroy]
+  end
+
+  namespace :api do 
+    resources :users, only: %i[index show create update destroy]
+    
+    resources :tweets, only: %i[index show create update destroy] do 
+      resources :likes, only: %i[index create destroy]
+    end
   end
   
 end

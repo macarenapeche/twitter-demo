@@ -12,12 +12,12 @@ class FollowsController < ApplicationController
 
   def new
     @user_options = User.all.map{ |u| [ u.handle, u.id ] }
-    @follower = @user.followers.build
+    @follow = Follow.new
   end
 
   def create
-    @follower = @user.followers.build(params.require(:follow).permit(:follower_id))
-    if @follower.save
+    @follow = Follow.create(params.require(:follow).permit(:follower_id, :user_id))
+    if @follow.save
       redirect_to @user
     else 
       render "new"
