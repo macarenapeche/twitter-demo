@@ -27,9 +27,7 @@ RSpec.describe 'Users API', type: :request do
     context 'when the request is valid' do
       let(:valid_params) { { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com" } }
 
-      it 'returns status code 201' do
-        expect(result).to have_http_status(201)
-      end
+      it { is_expected.to have_http_status(201) }
 
       it 'creates an user' do
         expect { result }.to change { User.all.count }.by(1)
@@ -39,9 +37,7 @@ RSpec.describe 'Users API', type: :request do
     context 'when the request is invalid' do
       before { post '/api/users', params: {}; response }
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
+      it { is_expected.to have_http_status(422) }
 
       it 'returns a failure message' do
         expect(response.body).to include("can't be blank")
