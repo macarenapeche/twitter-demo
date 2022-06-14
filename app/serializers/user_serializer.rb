@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer 
-  attributes :id, :name, :handle, :created_at, :updated_at, :tweets
+  attributes :id, :name, :handle, :email, :created_at, :updated_at, :tweets
 
   def created_at
     object.created_at.to_i
