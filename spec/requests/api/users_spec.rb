@@ -5,10 +5,7 @@ RSpec.describe 'Users API', type: :request do
       response
     end
 
-    it 'returns status code 200' do
-      expect(result).to have_http_status(200)
-    end
-
+    it { is_expected.to have_http_status(200) }
     specify { expect(JSON.parse(result.body)).to eq([]) }
 
     context 'when has users' do
@@ -27,14 +24,15 @@ RSpec.describe 'Users API', type: :request do
       response
     end
 
-    let(:valid_params) { { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com" } }
     context 'when the request is valid' do
+      let(:valid_params) { { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com" } }
+
       it 'returns status code 201' do
         expect(result).to have_http_status(201)
       end
 
       it 'creates an user' do
-        expect { result }.to change { User.all.length }.by(1)
+        expect { result }.to change { User.all.count }.by(1)
       end
     end
 
@@ -59,11 +57,9 @@ RSpec.describe 'Users API', type: :request do
 
     context 'when user exists' do
       let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-      let!(:user_id) { User.all.first.id }
-      
-      it 'returns status code 200' do
-        expect(result).to have_http_status(200)
-      end
+      let!(:user_id) { user.id }
+
+      it { is_expected.to have_http_status(200) }
 
       it 'returns the user' do
         expect(JSON.parse(result.body)['id']).to eq(user_id)
@@ -73,9 +69,7 @@ RSpec.describe 'Users API', type: :request do
     context 'when user does not exist' do
       let(:user_id) { 0 }
 
-      it 'returns a status code 404' do
-        expect(result).to have_http_status(404)
-      end
+      it { is_expected.to have_http_status(404) }
 
       it 'returns a not found message' do
         expect(JSON.parse(result.body)).to include("Couldn't find User with 'id'=0")
@@ -93,9 +87,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when the request is valid' do
-      it 'returns status code 202' do
-        expect(result).to have_http_status(202)
-      end
+      it { is_expected.to have_http_status(202) }
 
       it 'updates the user' do
         expect { result }.to change { user.name }
@@ -105,9 +97,7 @@ RSpec.describe 'Users API', type: :request do
     context 'when the request is invalid' do
       before { put "/api/users/#{user_id}", params: {}; response }
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
+      specify { expect(response).to have_http_status(422) }
 
       it 'returns a failure message' do
         expect(response.body).to include("can't be blank")
@@ -120,8 +110,7 @@ RSpec.describe 'Users API', type: :request do
     let!(:user_id) { User.all.first.id }
 
     before { delete "/api/users/#{user_id}" }
-    it 'returns status code 204' do
-      expect(response).to have_http_status(204)
-    end
+
+    specify { expect(response).to have_http_status(204) }
   end
 end
