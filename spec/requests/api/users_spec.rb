@@ -93,10 +93,13 @@ RSpec.describe 'Users API', type: :request do
       end
 
       # Here should be a test checking the response like `expect(JSON.parse(result.body)).to match(...)`
+      it 'updates the response' do
+        expect(JSON.parse(result.body)).to match(hash_including("name"=>"Macarena Peche")) 
+      end
     end
 
     context 'when the request is invalid' do
-      before { put "/api/users/#{user.id}", params: { name: "" }; response } # UPDATE: DONE. REVIEW: If we don't send a key, it is not empty, we should send smth like { name: "" } or { name: nil } 
+      before { put "/api/users/#{user.id}", params: { name: "" } } # UPDATE: DONE. REVIEW: If we don't send a key, it is not empty, we should send smth like { name: "" } or { name: nil } 
 
       specify { expect(response).to have_http_status(422) }
 

@@ -93,6 +93,10 @@ RSpec.describe 'Tweets API', type: :request do
       it 'updates the tweet' do
         expect { result }.to change { tweet.reload.content }.from("some content").to("content - edited")
       end
+
+      it 'updates the response' do
+        expect(JSON.parse(result.body)).to match(hash_including("content"=>"content - edited")) 
+      end
     end
 
     context 'when the request is invalid' do

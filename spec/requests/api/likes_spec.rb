@@ -44,16 +44,18 @@ RSpec.describe 'Likes API' do
       it { expect(response).to have_http_status(422) }
 
       it 'returns a failure message' do
-        expect(response.body).to include("can't be blank")
+        expect(JSON.parse(response.body)).to match({
+          "user_id"=>["can't be blank"],
+          "user"=>["must exist"],
+        }) 
       end
     end    
   end
 
   describe 'DELETE /api/tweets/:tweet_id/likes/:id' do
     let!(:like) { Like.create(tweet_id: tweet.id, user_id: another_user.id) }
-    let!(:like_id) { like.id }
 
-    before { delete "/api/tweets/#{tweet.id}/likes/#{like_id}" }
+    before { delete "/api/tweets/#{tweet.id}/likes/#{like.id}" }
 
     specify { expect(response).to have_http_status(204) }
   end
