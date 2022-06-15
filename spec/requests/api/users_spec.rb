@@ -37,7 +37,7 @@ RSpec.describe 'Users API', type: :request do
     context 'when the request is invalid' do
       before { post '/api/users', params: {}; response }
 
-      it { is_expected.to have_http_status(422) }
+      specify { expect(response).to have_http_status(422) }
 
       it 'returns a failure message' do
         expect(response.body).to include("can't be blank")
@@ -75,23 +75,23 @@ RSpec.describe 'Users API', type: :request do
 
   describe 'PUT /api/users/:id' do
     let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-    let!(:user_id) { User.all.first.id }
     
     subject(:result) do
-      put "/api/users/#{user_id}", params: { name: "Macarena Peche", handle: "mapeciris", email: "macarena@toptal.com" }
+      put "/api/users/#{user.id}", params: { user: { name: "Macarena Peche", handle: "mapeciris", email: "macarena@toptal.com" } }
+      user.reload
       response
     end
 
     context 'when the request is valid' do
-      it { is_expected.to have_http_status(202) }
+      it { is_expected.to have_http_status(200) }
 
       it 'updates the user' do
-        expect { result }.to change { user.name }
+        expect(user.name).to eq("Macarena Peche")
       end
     end
 
     context 'when the request is invalid' do
-      before { put "/api/users/#{user_id}", params: {}; response }
+      before { put "/api/users/#{user.id}", params: { user: {} }; response }
 
       specify { expect(response).to have_http_status(422) }
 
