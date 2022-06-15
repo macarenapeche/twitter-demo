@@ -1,6 +1,6 @@
 <h1>Start following @<%= @user.handle %></h1>
 
-<%= form_with(model: [@user,@follow], local: true) do |form| %>
+<%= form_with(model: [@user, @follow], local: true) do |form| %>
 
   <%= select(:follow, :follower_id, @user_options) %>
   </br></br>

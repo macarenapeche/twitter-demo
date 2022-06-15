@@ -13,11 +13,12 @@
 </p>
 
 <p>
-  <%= button_to "Followers", user_follows_path(@user), method: :get,form: {style: 'display:inline-block;'}%>
+  <%= button_to "Followers (#{@user.followers.count})", followers_user_path(@user), method: :get,form: {style: 'display:inline-block;'}%>
+  <%= button_to "Following (#{@user.following.count})", following_user_path(@user), method: :get,form: {style: 'display:inline-block;'}%>
 </p>
 
 
-<h2><%= @user.name %> Tweets </h2>
+<h2><%= @user.name %>'s Tweets </h2>
 
 <% @user.tweets.reverse_each do |tweet| %>
   <p>
