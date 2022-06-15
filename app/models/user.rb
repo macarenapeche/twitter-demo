@@ -9,7 +9,21 @@ class User < ApplicationRecord
   has_many :tweets, dependent: :destroy
   has_many :likes, dependent: :destroy
 
-  has_many :follows
-  has_many :followers, through: :follows, class_name: 'User'
-  has_many :following, through: :follows, foreign_key: :follower_id, source: :user
+  has_many :active_follows, class_name: "Follow", foreign_key: :follower_id, dependent: :destroy
+  has_many :pasive_follows, class_name: "Follow", foreign_key: :user_id, dependent: :destroy
+
+  has_many :followers, through: :pasive_follows, source: :follower
+  has_many :following, through: :active_follows, source: :user
+  
+  def follow(user)
+    active_follows.create(user_id: user.id)
+  end
+
+  def unfollow(user)
+    active_follows.find_by(user_id: user.id).destroy
+  end
+
+  def following?(user) 
+    following.include?(user)
+  end
 end

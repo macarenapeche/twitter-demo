@@ -42,6 +42,20 @@ class UsersController < ApplicationController
     redirect_to users_path, status: :see_other
   end
 
+  def following
+    @title = "Following"
+    @user  = User.find(params[:id])
+    @following = @user.following
+    render 'show_following'
+  end
+
+  def followers
+    @title = "Followers"
+    @user  = User.find(params[:id])
+    @followers = @user.followers
+    render 'show_followers'
+  end
+
   private
 
   def set_user
