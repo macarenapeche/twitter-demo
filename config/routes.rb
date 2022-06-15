@@ -23,5 +23,4 @@ Rails.application.routes.draw do
       resources :likes, only: %i[index create destroy]
     end
   end
-  
 end

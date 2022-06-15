@@ -2,17 +2,18 @@ module Api
   class UsersController < ApplicationController
 
     def index
-      @users = User.all 
-      render json: @users 
+      @users = User.all
+      # render json: @users # default: include only direct associations
+      # render json: @users, include: '' # include no associations
+      # render json: @users, include: '**' # include all associations
+      # render json: @users, include: :tweets # include some associations
+      # render json: @users, include: { tweets: %i[likes author] } # include some associations
+      render json: @users, include: { tweets: [:likes, author: :likes] } # include some associations
     end
 
     def show
-      begin
-        @user = User.find(params[:id])
-        render json: @user
-      rescue ActiveRecord::RecordNotFound => e
-        render json: e, status: :not_found
-      end
+      @user = User.find(params[:id])
+      render json: @user
     end
 
     def create
@@ -28,7 +29,7 @@ module Api
       @user = User.find(params[:id])
       if @user.update(user_params)
         render json: @user
-      else 
+      else
         render json: @user.errors, status: :unprocessable_entity
       end
     end
@@ -41,7 +42,7 @@ module Api
     private
 
     def user_params
-      params.permit(:name, :handle, :email)
+      params.permit(:name, :handle, :email, :bio)
     end
   end
 end
