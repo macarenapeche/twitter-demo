@@ -31,7 +31,7 @@ RSpec.describe 'Tweets API', type: :request do
       it { is_expected.to have_http_status(201) }
 
       it 'creates a tweet' do
-        expect { result }.to change { Tweet.all.count }.by(1)
+        expect { result }.to change(Tweet, :count).by(1)
       end
     end
 
@@ -41,7 +41,10 @@ RSpec.describe 'Tweets API', type: :request do
       it { expect(response).to have_http_status(422) }
 
       it 'returns a failure message' do
-        expect(response.body).to include("can't be blank")
+        expect(JSON.parse(response.body)).to match({
+          "content"=>["can't be blank"],
+          "user"=>["must exist"],
+        }) 
       end
     end
   end
@@ -69,7 +72,7 @@ RSpec.describe 'Tweets API', type: :request do
       it { is_expected.to have_http_status(404) }
 
       it 'returns a not found message' do 
-        expect(JSON.parse(result.body)).to include("Couldn't find Tweet with 'id'=0")
+        expect(JSON.parse(result.body)).to eq("error" => "Couldn't find Tweet with 'id'=0")
       end
     end
   end
@@ -80,25 +83,27 @@ RSpec.describe 'Tweets API', type: :request do
     let!(:tweet_id) { tweet.id }
 
     subject(:result) do
-      put "/api/tweets/#{tweet_id}", params: { content: "content - edited", user_id: user.id }
+      put "/api/tweets/#{tweet_id}", params: { content: "content - edited" }
       response
     end
 
     context 'when the request is valid' do
-      it { is_expected.to have_http_status(202) }
+      it { is_expected.to have_http_status(200) }
 
       it 'updates the tweet' do
-        expect { result }.to change { tweet.content }
+        expect { result }.to change { tweet.reload.content }.from("some content").to("content - edited")
       end
     end
 
     context 'when the request is invalid' do
-      before { put "/api/tweets/#{tweet_id}", params: {}; response }
+      before { put "/api/tweets/#{tweet_id}", params: { content: "" }; response }
 
       specify { expect(response).to have_http_status(422) }
 
       it 'returns a failure message' do
-        expect(response.body).to include("can't be blank")
+        expect(JSON.parse(response.body)).to match({
+          "content"=>["can't be blank"],
+        }) 
       end
     end
   end

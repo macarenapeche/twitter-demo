@@ -6,12 +6,8 @@ module Api
     end
 
     def show
-      begin
-        @tweet = Tweet.find(params[:id])
-        render json: @tweet
-      rescue ActiveRecord::RecordNotFound => e
-        render json: e, status: :not_found
-      end
+      @tweet = Tweet.find(params[:id])
+      render json: @tweet
     end
 
     def create
@@ -26,7 +22,7 @@ module Api
     def update
       @tweet = Tweet.find(params[:id])
       if @tweet.update(tweet_params)
-        render json: @tweet, status: :accepted
+        render json: @tweet
       else 
         render json: @tweet.errors, status: :unprocessable_entity
       end

@@ -35,12 +35,16 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/users', params: {}; response }
+      before { post '/api/users', params: {} }
 
       specify { expect(response).to have_http_status(422) }
 
       it 'returns a failure message' do
-        expect(response.body).to include("can't be blank")
+        expect(JSON.parse(response.body)).to match({
+          "name"=>["can't be blank", "is too short (minimum is 2 characters)"],
+          "handle"=>["can't be blank", "is invalid"],
+          "email"=>["can't be blank", "is invalid"]
+        }) 
       end
     end
   end
@@ -77,7 +81,7 @@ RSpec.describe 'Users API', type: :request do
     let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
     
     subject(:result) do
-      put "/api/users/#{user.id}", params: { name: "Macarena Peche", handle: "mapeciris", email: "macarena@toptal.com" }
+      put "/api/users/#{user.id}", params: { name: "Macarena Peche" }
       response
     end
 
@@ -92,12 +96,14 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { put "/api/users/#{user.id}", params: {}; response } # REVIEW: If we don't send a key, it is not empty, we should send smth like { name: "" } or { name: nil }
+      before { put "/api/users/#{user.id}", params: { name: "" }; response } # UPDATE: DONE. REVIEW: If we don't send a key, it is not empty, we should send smth like { name: "" } or { name: nil } 
 
       specify { expect(response).to have_http_status(422) }
 
       it 'returns a failure message' do
-        expect(response.body).to include("can't be blank") # REVIEW: check the body more precisely with JSON.parse and etc
+        expect(JSON.parse(response.body)).to match({
+          "name"=>["can't be blank", "is too short (minimum is 2 characters)"],
+        }) # UPDATE: DONE. REVIEW: check the body more precisely with JSON.parse and etc 
       end
     end
   end
