@@ -30,7 +30,7 @@ RSpec.describe 'Users API', type: :request do
       it { is_expected.to have_http_status(201) }
 
       it 'creates an user' do
-        expect { result }.to change { User.all.count }.by(1)
+        expect { result }.to change(User, :count).by(1)
       end
     end
 
@@ -68,7 +68,7 @@ RSpec.describe 'Users API', type: :request do
       it { is_expected.to have_http_status(404) }
 
       it 'returns a not found message' do
-        expect(JSON.parse(result.body)).to include("Couldn't find User with 'id'=0")
+        expect(JSON.parse(result.body)).to eq("error" => "Couldn't find User with 'id'=0")
       end
     end
   end
@@ -77,8 +77,7 @@ RSpec.describe 'Users API', type: :request do
     let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
     
     subject(:result) do
-      put "/api/users/#{user.id}", params: { user: { name: "Macarena Peche", handle: "mapeciris", email: "macarena@toptal.com" } }
-      user.reload
+      put "/api/users/#{user.id}", params: { name: "Macarena Peche", handle: "mapeciris", email: "macarena@toptal.com" }
       response
     end
 
@@ -86,17 +85,19 @@ RSpec.describe 'Users API', type: :request do
       it { is_expected.to have_http_status(200) }
 
       it 'updates the user' do
-        expect(user.name).to eq("Macarena Peche")
+        expect { result }.to change { user.reload.name }.from("Macarena").to("Macarena Peche")
       end
+
+      # Here should be a test checking the response like `expect(JSON.parse(result.body)).to match(...)`
     end
 
     context 'when the request is invalid' do
-      before { put "/api/users/#{user.id}", params: { user: {} }; response }
+      before { put "/api/users/#{user.id}", params: {}; response } # REVIEW: If we don't send a key, it is not empty, we should send smth like { name: "" } or { name: nil }
 
       specify { expect(response).to have_http_status(422) }
 
       it 'returns a failure message' do
-        expect(response.body).to include("can't be blank")
+        expect(response.body).to include("can't be blank") # REVIEW: check the body more precisely with JSON.parse and etc
       end
     end
   end

@@ -1,8 +1,11 @@
 class TweetSerializer < ActiveModel::Serializer 
-  attributes :id, :content, :user_id, :author, :created_at, :updated_at
+  attributes :id, :content, :user_id, :created_at, :updated_at
+
+  has_one :author, serializer: UserSerializer
+  has_many :likes
 
   def author
-    User.find(object.user_id).handle
+    object.user
   end
 
   def created_at
