@@ -41,6 +41,16 @@ module Api
       @user.destroy      
     end
 
+    def following
+      @user  = User.find(params[:id])
+      render @user.following
+    end
+  
+    def followers
+      @user  = User.find(params[:id])
+      render @user.followers
+    end
+
     private
 
     def user_params

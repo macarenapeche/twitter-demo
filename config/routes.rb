@@ -20,7 +20,12 @@ Rails.application.routes.draw do
   end
 
   namespace :api do 
-    resources :users, only: %i[index show create update destroy]
+    resources :users, only: %i[index show create update destroy] do
+      resources :follows, only: %i[create destroy]
+      member do
+        get :following, :followers
+      end
+    end
     
     resources :tweets, only: %i[index show create update destroy] do 
       resources :likes, only: %i[index create destroy]
