@@ -43,12 +43,12 @@ module Api
 
     def following
       @user  = User.find(params[:id])
-      render @user.following
+      render json: @user.following
     end
   
     def followers
       @user  = User.find(params[:id])
-      render @user.followers
+      render json: @user.followers
     end
 
     private

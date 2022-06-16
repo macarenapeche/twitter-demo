@@ -7,7 +7,7 @@ class FollowsController < ApplicationController
   end
 
   def create
-    @follower = User.find(params[:follow][:follower_id])
+    @follower = User.find(follow_params[:follower_id])
     @user.followers << @follower unless @user.followers.include?(@follower)
     redirect_to followers_user_path(@user)
   end 
@@ -22,5 +22,9 @@ class FollowsController < ApplicationController
 
   def get_user
     @user = User.find(params[:user_id])
+  end
+
+  def follow_params
+    params.require(:follow).permit(:user_id, :follower_id)
   end
 end

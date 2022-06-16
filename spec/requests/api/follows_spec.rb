@@ -4,31 +4,31 @@ RSpec.describe "Follow API" do
 
   describe "POST /api/users/:user_id/follows" do
     subject(:result) do
-      post "/users/#{user.id}/follows", params: valid_params 
+      post "/api/users/#{user.id}/follows", params: valid_params 
       response
     end
 
     context 'when the request is valid' do
       let!(:valid_params) { { follow: { follower_id: follower.id } } }
 
-      it { expect(response).to have_http_status(201) }
+      it { expect(result).to have_http_status(200) }
 
       it 'creates a new follow' do
         expect { result }.to change(Follow, :count).by(1)
       end
 
       it 'adds a follower to user' do
-        expect(user.followers).to include(follower)
+        expect(JSON.parse(result.body)).to include(hash_including("name"=>"follower", "handle"=>"follower","email"=>"follower@toptal.com"))
       end
     end
 
     context 'when the request is invalid' do
-      let!(:params) { { follow: {} } }
+      before { post "/api/users/#{user.id}/follows", params: { follow: { follower_id: 0 } } }
 
-      it { is_expected.to have_http_status(422) }
+      it { expect(response).to have_http_status(404) }
 
       it 'returns a failure message' do
-        expect(JSON.parse(response.body)).to match({"follower_id"=>["can't be blank"]}) 
+        expect(JSON.parse(response.body)).to match({"error"=>"Couldn't find User with 'id'=0"}) 
       end
     end
   end
