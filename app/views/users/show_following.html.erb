@@ -1,9 +1,9 @@
 <h1>@<%= @user.handle %> Following</h1>
 
 <ul>
-  <% @following.each do |following| %>
-    <li>@<%= following.handle %>
-    <%= button_to "Remove", user_follow_path(@user, following), method: :delete, form: {style: 'display:inline-block;'} %>
+  <% @follow.each do |follow| %>
+    <li>@<%= User.find(follow.user_id).handle %>
+    <%= button_to "Remove", user_follow_path(@user, follow), method: :delete, form: {style: 'display:inline-block;'} %>
     </li>
   <% end %>
 </ul>

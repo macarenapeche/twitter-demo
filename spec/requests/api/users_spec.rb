@@ -119,4 +119,34 @@ RSpec.describe 'Users API', type: :request do
 
     specify { expect(response).to have_http_status(204) }
   end
+
+  # describe 'GET /api/users/:id/followers' do
+  #   subject(:result) do
+  #     get "/api/users/#{user_id}/followers"
+  #     response
+  #   end
+
+  #   context 'when user exists' do
+  #     let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
+  #     let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@toptal.com") }
+  #     let!(:follow) { Follow.create(user_id: user.id, follower_id: follower.id) }
+  #     let!(:user_id) { user.id }
+
+  #     it { expect(result).to have_http_status(200) }
+
+  #     it 'returns the followers' do
+  #       expect(JSON.parse(result.body)).to match(hash_including("name" => "follower", "handle" => "follower", "email" => "follower"))
+  #     end
+  #   end
+
+  #   context 'when user does not exist' do
+  #     let(:user_id) { 0 }
+
+  #     it { expect(result).to have_http_status(404) }
+
+  #     it 'returns a not found message' do
+  #       expect(JSON.parse(result.body)).to eq("error" => "Couldn't find User with 'id'=0")
+  #     end
+  #   end
+  # end
 end

@@ -43,16 +43,14 @@ class UsersController < ApplicationController
   end
 
   def following
-    @title = "Following"
     @user  = User.find(params[:id])
-    @following = @user.following
+    @follow = Follow.all.select { |follow| follow.follower_id == @user.id }
     render 'show_following'
   end
 
   def followers
-    @title = "Followers"
     @user  = User.find(params[:id])
-    @followers = @user.followers
+    @follow = Follow.all.select { |follow| follow.user_id == @user.id }
     render 'show_followers'
   end
 
