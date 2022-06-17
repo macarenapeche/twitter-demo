@@ -1,3 +1,6 @@
+# REVIEW: this staff is conventionally put to `spec/support` folder, not to mess up with real tests
+# You can build a whole structure there
+# it might be that this folder is not loaded by default and you need to fix the spec_helper
 
 RSpec.shared_examples 'user does not exist' do
   let(:user_id) { 0 }
