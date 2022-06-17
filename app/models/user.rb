@@ -5,7 +5,6 @@ class User < ApplicationRecord
   validates_format_of :email, with: URI::MailTo::EMAIL_REGEXP
   validates_format_of :handle, with: /\A[\w\d_-]+\z/
 
-  
   has_many :tweets, dependent: :destroy
   has_many :likes, dependent: :destroy
 

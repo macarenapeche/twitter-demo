@@ -9,7 +9,6 @@ module Api
       # render json: @users, include: :tweets # include some associations
       # render json: @users, include: { tweets: %i[likes author] } # include some associations
       # render json: @users, include: { tweets: [:likes, author: :likes] } # include some associations
-
       render json: @users, include: %i[tweets followers following]
     end
 
