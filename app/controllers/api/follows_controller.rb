@@ -1,8 +1,8 @@
 module Api
   class FollowsController < ApplicationController
+    before_action :get_user
 
     def create
-      @user = User.find(params[:user_id])
       @follower = User.find(follow_params[:follower_id])
       @user.followers << @follower unless @user.followers.include?(@follower)
       render json: @user.followers
@@ -10,7 +10,7 @@ module Api
 
     def destroy
       @follow = Follow.find(params[:id])
-      @follow.destroy
+      @follow.destroy if @user
     end
     
     private 

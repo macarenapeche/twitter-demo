@@ -1,3 +1,5 @@
+require_relative 'shared_example_spec.rb'
+
 RSpec.describe 'Likes API' do
   let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
   let!(:another_user) { User.create(name: "name", handle: "handle", email: "email@domain.com") }
@@ -23,8 +25,10 @@ RSpec.describe 'Likes API' do
   end 
 
   describe "POST /api/tweets/:tweet_id/likes" do
+    let!(:tweet_id) { tweet.id }
+
     subject(:result) do
-      post "/api/tweets/#{tweet.id}/likes", params: valid_params
+      post "/api/tweets/#{tweet_id}/likes", params: valid_params
       response
     end
 
@@ -39,7 +43,7 @@ RSpec.describe 'Likes API' do
     end
 
     context 'when request is invalid' do
-      before { post "/api/tweets/#{tweet.id}/likes", params: {} }
+      before { post "/api/tweets/#{tweet_id}/likes", params: {} }
       
       it { expect(response).to have_http_status(422) }
 
@@ -49,14 +53,38 @@ RSpec.describe 'Likes API' do
           "user"=>["must exist"],
         }) 
       end
-    end    
+    end
+    
+    context 'when tweet does not exist' do
+      let(:valid_params) { { tweet_id: tweet.id, user_id: another_user.id } }
+      
+      include_examples "tweet does not exist"
+    end
   end
 
   describe 'DELETE /api/tweets/:tweet_id/likes/:id' do
     let!(:like) { Like.create(tweet_id: tweet.id, user_id: another_user.id) }
+    let!(:result) { delete "/api/tweets/#{tweet_id}/likes/#{like.id}"; response }
 
-    before { delete "/api/tweets/#{tweet.id}/likes/#{like.id}" }
+    context 'when tweet exists' do
+      let!(:tweet_id) { tweet.id }
 
-    specify { expect(response).to have_http_status(204) }
+      specify { expect(result).to have_http_status(204) }
+
+      context 'when like does not exist' do
+        let!(:like_id) { 0 }
+        let!(:result) { delete "/api/tweets/#{tweet_id}/likes/#{like_id}"; response }
+
+        it { expect(result).to have_http_status(404) }
+
+        it 'returns a not found message' do 
+          expect(JSON.parse(result.body)).to eq("error" => "Couldn't find Like with 'id'=0")
+        end
+      end
+    end
+
+    context 'when tweet does not exist' do
+      include_examples "tweet does not exist"
+    end
   end
 end

@@ -1,3 +1,8 @@
+require_relative 'shared_context_spec.rb'
+require_relative 'shared_example_spec.rb'
+
+
+
 RSpec.describe 'Users API', type: :request do
   describe 'GET /api/users' do
     subject(:result) do
@@ -6,6 +11,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     it { is_expected.to have_http_status(200) }
+
     specify { expect(JSON.parse(result.body)).to eq([]) }
 
     context 'when has users' do
@@ -56,8 +62,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when user exists' do
-      let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-      let!(:user_id) { user.id }
+      include_context 'when user exists'
 
       it { is_expected.to have_http_status(200) }
 
@@ -67,21 +72,15 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when user does not exist' do
-      let(:user_id) { 0 }
-
-      it { is_expected.to have_http_status(404) }
-
-      it 'returns a not found message' do
-        expect(JSON.parse(result.body)).to eq("error" => "Couldn't find User with 'id'=0")
-      end
+      include_examples 'user does not exist'
     end
   end
 
   describe 'PUT /api/users/:id' do
-    let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-    
+    include_context 'when user exists'
+
     subject(:result) do
-      put "/api/users/#{user.id}", params: { name: "Macarena Peche" }
+      put "/api/users/#{user_id}", params: { name: "Macarena Peche" }
       response
     end
 
@@ -109,15 +108,21 @@ RSpec.describe 'Users API', type: :request do
         }) # UPDATE: DONE. REVIEW: check the body more precisely with JSON.parse and etc 
       end
     end
+
+    context 'when user does not exist' do
+      include_examples 'user does not exist'
+    end
   end
 
   describe 'DELETE /api/users/:id' do
-    let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-    let!(:user_id) { User.all.first.id }
+    include_context 'when user exists'
+    let!(:result) { delete "/api/users/#{user_id}"; response }
 
-    before { delete "/api/users/#{user_id}" }
+    specify { expect(result).to have_http_status(204) }
 
-    specify { expect(response).to have_http_status(204) }
+    context 'when user does not exist' do
+      include_examples 'user does not exist'
+    end
   end
 
   describe 'GET /api/users/:id/followers' do
@@ -127,8 +132,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when user exists' do
-      let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-      let!(:user_id) { user.id }
+      include_context 'when user exists'
       let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@toptal.com") }
       let!(:follow) { Follow.create(user_id: user.id, follower_id: follower.id) }
 
@@ -141,13 +145,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when user does not exist' do
-      let(:user_id) { 0 }
-
-      it { expect(result).to have_http_status(404) }
-
-      it 'returns a not found message' do
-        expect(JSON.parse(result.body)).to eq("error" => "Couldn't find User with 'id'=0")
-      end
+      include_examples 'user does not exist'
     end
   end
 
@@ -158,8 +156,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when user exists' do
-      let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-      let!(:user_id) { user.id }
+      include_context 'when user exists'
       let!(:following) { User.create(name: "following", handle: "following", email: "following@toptal.com") }
       let!(:follow) { Follow.create(user_id: following.id, follower_id: user.id) }
 
@@ -172,13 +169,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when user does not exist' do
-      let(:user_id) { 0 }
-
-      it { expect(result).to have_http_status(404) }
-
-      it 'returns a not found message' do
-        expect(JSON.parse(result.body)).to eq("error" => "Couldn't find User with 'id'=0")
-      end
+      include_examples 'user does not exist'
     end
   end
 end

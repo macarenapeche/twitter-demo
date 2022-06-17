@@ -1,3 +1,7 @@
+require_relative 'shared_context_spec.rb'
+require_relative 'shared_example_spec.rb'
+
+
 RSpec.describe 'Tweets API', type: :request do
   let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
 
@@ -11,7 +15,7 @@ RSpec.describe 'Tweets API', type: :request do
     specify { expect(JSON.parse(result.body)).to eq([]) }
 
     context 'with tweets' do
-      let!(:tweet) { Tweet.create(content: "some content", user_id: user.id) }
+      include_context 'when tweet exists' 
 
       it 'shows tweet attributes' do
         expect(JSON.parse(result.body)).to match([hash_including("content" => "some content", "user_id" => user.id)])
@@ -56,8 +60,7 @@ RSpec.describe 'Tweets API', type: :request do
     end
 
     context 'when tweet exists' do
-      let!(:tweet) { Tweet.create(content: 'some content', user_id: user.id) }
-      let!(:tweet_id) { tweet.id }
+      include_context 'when tweet exists'
 
       it { is_expected.to have_http_status(200) }
 
@@ -67,20 +70,13 @@ RSpec.describe 'Tweets API', type: :request do
     end
 
     context 'when tweet does not exist' do
-      let!(:tweet_id) { 0 }
-
-      it { is_expected.to have_http_status(404) }
-
-      it 'returns a not found message' do 
-        expect(JSON.parse(result.body)).to eq("error" => "Couldn't find Tweet with 'id'=0")
-      end
+      include_examples 'tweet does not exist'
     end
   end
 
 
   describe 'PUT /api/tweets/:id' do
-    let!(:tweet) { Tweet.create(content: 'some content', user_id: user.id) }
-    let!(:tweet_id) { tweet.id }
+    include_context 'when tweet exists'
 
     subject(:result) do
       put "/api/tweets/#{tweet_id}", params: { content: "content - edited" }
@@ -110,14 +106,20 @@ RSpec.describe 'Tweets API', type: :request do
         }) 
       end
     end
+
+    context 'when tweet does not exist' do
+      include_examples 'tweet does not exist'
+    end
   end
 
   describe 'DELETE /api/tweets/:id' do
-    let!(:tweet) { Tweet.create(content: 'some content', user_id: user.id) }
-    let!(:tweet_id) { tweet.id }
+    include_context 'when tweet exists'
+    let!(:result) { delete "/api/tweets/#{tweet_id}"; response }
 
-    before { delete "/api/tweets/#{tweet_id}" }
+    specify { expect(result).to have_http_status(204) }
 
-    specify { expect(response).to have_http_status(204) }
+    context 'when tweet does not exist' do
+      include_examples 'tweet does not exist'
+    end
   end
 end
