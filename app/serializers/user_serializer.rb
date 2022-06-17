@@ -2,6 +2,8 @@ class UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :handle, :email, :created_at, :updated_at
 
   has_many :tweets
+  has_many :followers
+  has_many :following
 
   def created_at
     object.created_at.to_i
