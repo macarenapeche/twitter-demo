@@ -35,7 +35,8 @@ module Api
 
     # REVIEW: It's a good idea to separate non-action methods as private
     # At least because whatever is not private, one must test
-
+    private 
+    
     def tweet_params
       params.permit(:content, :user_id)
     end

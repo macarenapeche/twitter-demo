@@ -1,7 +1,3 @@
-require_relative 'shared_context_spec.rb'
-require_relative 'shared_example_spec.rb'
-
-
 RSpec.describe 'Tweets API', type: :request do
   let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
 
@@ -12,6 +8,7 @@ RSpec.describe 'Tweets API', type: :request do
     end
 
     it { is_expected.to have_http_status(200)}
+
     specify { expect(JSON.parse(result.body)).to eq([]) }
 
     context 'with tweets' do
@@ -37,6 +34,12 @@ RSpec.describe 'Tweets API', type: :request do
       it 'creates a tweet' do
         expect { result }.to change(Tweet, :count).by(1)
       end
+
+      it 'responds with correct data' do
+        expect(JSON.parse(result.body)['id']).to eq(1)
+        expect(JSON.parse(result.body)['content']).to eq("some content")
+        expect(JSON.parse(result.body)['user_id']).to eq(user.id)
+      end
     end
 
     context 'when request is invalid' do
@@ -48,7 +51,12 @@ RSpec.describe 'Tweets API', type: :request do
         expect(JSON.parse(response.body)).to match({
           "content"=>["can't be blank"],
           "user"=>["must exist"],
+          "user_id"=>["can't be blank"]
         }) 
+      end
+
+      it 'does not create a tweet' do
+        expect { response }.not_to change(Tweet, :count)
       end
     end
   end
@@ -64,8 +72,10 @@ RSpec.describe 'Tweets API', type: :request do
 
       it { is_expected.to have_http_status(200) }
 
-      it 'returns the tweet' do
-        expect(JSON.parse(result.body)['id']).to eq(tweet_id)
+      it 'responds with correct data' do
+        expect(JSON.parse(result.body)['id']).to eq(1)
+        expect(JSON.parse(result.body)['content']).to eq("some content")
+        expect(JSON.parse(result.body)['user_id']).to eq(user.id)
       end
     end
 
@@ -90,7 +100,7 @@ RSpec.describe 'Tweets API', type: :request do
         expect { result }.to change { tweet.reload.content }.from("some content").to("content - edited")
       end
 
-      it 'updates the response' do
+      it 'responds with correct data' do
         expect(JSON.parse(result.body)).to match(hash_including("content"=>"content - edited")) 
       end
     end

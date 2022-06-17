@@ -1,7 +1,8 @@
 class Tweet < ApplicationRecord
-  validates_presence_of :content
-  validates :content, length: { maximum: 280 }
+  validates :content, presence: true, length: { maximum: 280 }
+  validates :user_id, presence: true
   
   belongs_to :user
   has_many :likes, dependent: :destroy
+  has_many :comments, dependent: :destroy
 end

@@ -21,6 +21,8 @@ module Api
       @like.destroy
     end
 
+    private
+
     def get_tweet
       @tweet = Tweet.find(params[:tweet_id])
     end

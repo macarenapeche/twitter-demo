@@ -21,3 +21,13 @@ RSpec.shared_examples 'tweet does not exist' do
     expect(JSON.parse(result.body)).to eq("error" => "Couldn't find Tweet with 'id'=0")
   end
 end
+
+RSpec.shared_examples 'comment does not exist' do
+  let!(:comment_id) { 0 }
+
+  it { expect(result).to have_http_status(404) }
+
+  it 'returns a not found message' do 
+    expect(JSON.parse(result.body)).to eq("error" => "Couldn't find Comment with 'id'=0")
+  end
+end

@@ -1,6 +1,3 @@
-require_relative 'shared_example_spec.rb'
-require_relative 'shared_context_spec.rb'
-
 RSpec.describe "Follow API" do
   include_context 'when user exists'
 
@@ -19,9 +16,9 @@ RSpec.describe "Follow API" do
 
       it 'creates a new follow' do
         expect { result }.to change(Follow, :count).by(1)
-      end
+      end 
 
-      it 'adds a follower to user' do
+      it 'responds with correct data' do
         expect(JSON.parse(result.body)).to include(hash_including("name"=>"follower", "handle"=>"follower","email"=>"follower@toptal.com"))
       end
     end
@@ -33,6 +30,10 @@ RSpec.describe "Follow API" do
 
       it 'returns a failure message' do
         expect(JSON.parse(response.body)).to match({"error"=>"Couldn't find User with 'id'=0"}) 
+      end
+
+      it 'does not create a follow' do
+        expect { response }.not_to change(Follow, :count)
       end
     end
 

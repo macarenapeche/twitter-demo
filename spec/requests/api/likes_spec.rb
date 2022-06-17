@@ -1,5 +1,3 @@
-require_relative 'shared_example_spec.rb'
-
 RSpec.describe 'Likes API' do
   let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
   let!(:another_user) { User.create(name: "name", handle: "handle", email: "email@domain.com") }
@@ -7,20 +5,28 @@ RSpec.describe 'Likes API' do
 
   describe "GET /api/tweets/:tweet_id/likes" do
     subject(:result) do
-      get "/api/tweets/#{tweet.id}/likes"
+      get "/api/tweets/#{tweet_id}/likes"
       response
     end
 
-    it { is_expected.to have_http_status(200) }
-    specify { expect(JSON.parse(result.body)).to eq([]) }
+    context 'when tweet exists' do
+      include_context 'when tweet exists'
 
+      it { is_expected.to have_http_status(200) }
 
-    context "with likes" do 
-      let!(:like) { Like.create(tweet_id: tweet.id, user_id: another_user.id) }
-
-      it 'shows the like' do
-        expect(JSON.parse(result.body)).to match([hash_including("tweet_id" => tweet.id, "user_id" => another_user.id)])
+      specify { expect(JSON.parse(result.body)).to eq([]) }
+  
+      context "with likes" do 
+        let!(:like) { Like.create(tweet_id: tweet.id, user_id: another_user.id) }
+  
+        it 'responds with correct data' do
+          expect(JSON.parse(result.body)).to match([hash_including("tweet_id" => tweet.id, "user_id" => another_user.id)])
+        end
       end
+    end
+
+    context 'when tweet does not exist' do
+      include_examples 'tweet does not exist'
     end
   end 
 
@@ -40,6 +46,12 @@ RSpec.describe 'Likes API' do
       it 'creates a like on the tweet' do
         expect { result }.to change { tweet.likes.count }.by(1)
       end
+
+      it 'responds with correct data' do
+        expect(JSON.parse(result.body)['id']).to eq(1)
+        expect(JSON.parse(result.body)['tweet_id']).to eq(tweet.id)
+        expect(JSON.parse(result.body)['user_id']).to eq(another_user.id)
+      end
     end
 
     context 'when request is invalid' do
@@ -52,6 +64,10 @@ RSpec.describe 'Likes API' do
           "user_id"=>["can't be blank"],
           "user"=>["must exist"],
         }) 
+      end
+
+      it 'does not create a like' do
+        expect { response }.not_to change(Like, :count)
       end
     end
     

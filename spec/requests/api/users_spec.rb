@@ -1,5 +1,4 @@
-require_relative 'shared_context_spec.rb' # REVIEW: This requires might be done from spec_helper. Something for you to research on your own ;)
-require_relative 'shared_example_spec.rb'
+# UPDATE: DONE (changing shared_context and shared_examples to spec/support). REVIEW: This requires might be done from spec_helper. Something for you to research on your own ;)
 
 RSpec.describe 'Users API', type: :request do
   describe 'GET /api/users' do
@@ -16,9 +15,9 @@ RSpec.describe 'Users API', type: :request do
       let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
       let(:json) { JSON.parse(result.body) }
 
-      it { expect(json).not_to be_empty }
+      # it { expect(json).not_to be_empty }
       
-      # REVIEW: If the lower spec works, the upper will work always so it's not that necessary
+      # UPDATE: DONE. REVIEW: If the lower spec works, the upper will work always so it's not that necessary
       it { expect(json).to match([hash_including("name" => "Macarena", "handle" => "mapeciris", "email" => "macarena@toptal.com")]) }
     end
   end
@@ -34,9 +33,17 @@ RSpec.describe 'Users API', type: :request do
 
       it { is_expected.to have_http_status(201) }
 
-      # REVIEW: Check the response body
+      # UPDATE: DONE. REVIEW: Check the response body
       it 'creates an user' do
         expect { result }.to change(User, :count).by(1)
+      end
+
+      it 'responds with correct data' do
+        expect(JSON.parse(result.body)['id']).to eq(1)
+        expect(JSON.parse(result.body)['name']).to eq("Macarena")
+        expect(JSON.parse(result.body)['handle']).to eq("mapeciris")
+        expect(JSON.parse(result.body)['email']).to eq("macarena@toptal.com")
+        expect(JSON.parse(result.body)['bio']).to eq(nil)
       end
     end
 
@@ -53,7 +60,10 @@ RSpec.describe 'Users API', type: :request do
         }) 
       end
 
-      # REVIEW: might make sense to check `not_to change(User, :count)` as well, to check behavior AND the response
+      # UPDATE: DONE. REVIEW: might make sense to check `not_to change(User, :count)` as well, to check behavior AND the response
+      it 'does not create an user' do
+        expect { response }.not_to change(User, :count)
+      end
     end
   end
 
@@ -68,8 +78,12 @@ RSpec.describe 'Users API', type: :request do
 
       it { is_expected.to have_http_status(200) }
 
-      it 'returns the user' do
+      it 'responds with correct data' do
         expect(JSON.parse(result.body)['id']).to eq(user_id)
+        expect(JSON.parse(result.body)['name']).to eq("Macarena")
+        expect(JSON.parse(result.body)['handle']).to eq("mapeciris")
+        expect(JSON.parse(result.body)['email']).to eq("macarena@toptal.com")
+        expect(JSON.parse(result.body)['bio']).to eq(nil)
       end
     end
 
@@ -93,7 +107,7 @@ RSpec.describe 'Users API', type: :request do
         expect { result }.to change { user.reload.name }.from("Macarena").to("Macarena Peche")
       end
 
-      # Here should be a test checking the response like `expect(JSON.parse(result.body)).to match(...)`
+      # UPDATE: DONE. Here should be a test checking the response like `expect(JSON.parse(result.body)).to match(...)`
       it 'responds with correct data' do
         expect(JSON.parse(result.body)).to match(hash_including("name"=>"Macarena Peche")) 
       end
