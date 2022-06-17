@@ -13,6 +13,7 @@
 </p>
 
 <p>
+  <%= button_to "Follow", new_user_follow_path(@user), method: :get, form: {style: 'display:inline-block;'} %> 
   <%= button_to "Followers (#{@user.followers.count})", followers_user_path(@user), method: :get,form: {style: 'display:inline-block;'}%>
   <%= button_to "Following (#{@user.following.count})", following_user_path(@user), method: :get,form: {style: 'display:inline-block;'}%>
 </p>
