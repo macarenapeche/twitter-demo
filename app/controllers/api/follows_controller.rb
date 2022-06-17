@@ -4,6 +4,11 @@ module Api
 
     def create
       @follower = User.find(follow_params[:follower_id])
+      # REVIEW: instead of this you can do smth like: 
+      # follow = user.passive_follows.build(follower: @follower)
+      # if follow.save ...
+      # 
+      # It would be better because if somebody tries to follow themselves, they'll see the error, not valid response with no changes
       @user.followers << @follower unless @user.followers.include?(@follower)
       render json: @user.followers
     end

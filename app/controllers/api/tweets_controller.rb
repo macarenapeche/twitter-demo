@@ -33,6 +33,9 @@ module Api
       @tweet.destroy  
     end
 
+    # REVIEW: It's a good idea to separate non-action methods as private
+    # At least because whatever is not private, one must test
+
     def tweet_params
       params.permit(:content, :user_id)
     end

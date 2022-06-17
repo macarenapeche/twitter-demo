@@ -1,7 +1,5 @@
-require_relative 'shared_context_spec.rb'
+require_relative 'shared_context_spec.rb' # REVIEW: This requires might be done from spec_helper. Something for you to research on your own ;)
 require_relative 'shared_example_spec.rb'
-
-
 
 RSpec.describe 'Users API', type: :request do
   describe 'GET /api/users' do
@@ -20,6 +18,7 @@ RSpec.describe 'Users API', type: :request do
 
       it { expect(json).not_to be_empty }
       
+      # REVIEW: If the lower spec works, the upper will work always so it's not that necessary
       it { expect(json).to match([hash_including("name" => "Macarena", "handle" => "mapeciris", "email" => "macarena@toptal.com")]) }
     end
   end
@@ -35,6 +34,7 @@ RSpec.describe 'Users API', type: :request do
 
       it { is_expected.to have_http_status(201) }
 
+      # REVIEW: Check the response body
       it 'creates an user' do
         expect { result }.to change(User, :count).by(1)
       end
@@ -52,6 +52,8 @@ RSpec.describe 'Users API', type: :request do
           "email"=>["can't be blank", "is invalid"]
         }) 
       end
+
+      # REVIEW: might make sense to check `not_to change(User, :count)` as well, to check behavior AND the response
     end
   end
 
@@ -92,7 +94,7 @@ RSpec.describe 'Users API', type: :request do
       end
 
       # Here should be a test checking the response like `expect(JSON.parse(result.body)).to match(...)`
-      it 'updates the response' do
+      it 'responds with correct data' do
         expect(JSON.parse(result.body)).to match(hash_including("name"=>"Macarena Peche")) 
       end
     end
@@ -111,6 +113,9 @@ RSpec.describe 'Users API', type: :request do
 
     context 'when user does not exist' do
       include_examples 'user does not exist'
+
+      # REVIEW: a little different, but valid (if you rename the shared example): 
+      # it_behaves_like 'non-existent user'
     end
   end
 
