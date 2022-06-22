@@ -14,5 +14,11 @@ class User < ApplicationRecord
 
   has_many :followers, through: :pasive_follows, source: :follower
   has_many :following, through: :active_follows, source: :user
-  
+
+
+  scope :handle_including, -> (str) { where("handle LIKE ?", "%" + User.sanitize_sql_like(str) + "%") }
+  scope :handle_starting_by, -> (str) { where("handle LIKE ?", User.sanitize_sql_like(str) + "%") }
+  scope :with_tweets, -> { select("*, (SELECT COUNT(*) from tweets where tweets.user_id = users.id) as tweets_count").where("tweets_count > 0") }
+  scope :without_tweets, -> { select("*, (SELECT COUNT(*) from tweets where tweets.user_id = users.id) as tweets_count").where("tweets_count = 0") }
+
 end
