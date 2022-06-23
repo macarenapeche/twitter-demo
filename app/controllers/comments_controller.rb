@@ -34,7 +34,7 @@ class CommentsController < ApplicationController
 
   def destroy
     @comment.destroy
-    redirect_to tweets_path, status: :see_other
+    redirect_to tweet_path(@tweet), status: :see_other
   end
 
   private
