@@ -5,10 +5,11 @@ class CommentsController < ApplicationController
 
   def index
     @comments = @tweet.comments
+    redirect_to @tweet
   end
 
   def new
-    @comment = Comment.new
+    @comment = @tweet.comments.build
   end
 
   def create

@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   end
   resources :tweets do
     resources :likes, only: %i[index new create destroy]
-    resources :comments, only: %i[index new create update destroy]
+    resources :comments, only: %i[index new create edit update destroy]
   end
 
   namespace :api do 
