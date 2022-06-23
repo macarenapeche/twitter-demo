@@ -2,7 +2,7 @@
 
 <ul>
   <% @follow.each do |follow| %>
-    <li>@<%= User.find(follow.user_id).handle %>
+    <li>@<%= follow.user.handle %>
     <%= button_to "Remove", user_follow_path(@user, follow), method: :delete, form: {style: 'display:inline-block;'} %>
     </li>
   <% end %>

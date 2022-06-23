@@ -20,6 +20,6 @@ class User < ApplicationRecord
   scope :handle_starting_by, -> (str) { where("handle LIKE ?", User.sanitize_sql_like(str) + "%") }
   scope :with_tweets, -> { select("*, (SELECT COUNT(*) from tweets where tweets.user_id = users.id) as tweets_count").where("tweets_count > 0") }
   scope :without_tweets, -> { select("*, (SELECT COUNT(*) from tweets where tweets.user_id = users.id) as tweets_count").where("tweets_count = 0") }
-  scope :other_users_handle_id, -> (id) { User.where.not(id: id).pluck(:handle, :id) }
+  scope :other_than, -> (id) { User.where.not(id: id) }
 
 end

@@ -3,7 +3,8 @@
 <p><%= button_to "Create User", new_user_path, method: :get %> </p>
 <p><%= button_to "Create Tweet", new_tweet_path, method: :get %> </p>
 
-<% Tweet.all.reverse_each do |tweet| %>
+<% popular_tweets = Tweet.popular(10).includes(:user) %>
+<% popular_tweets.each do |tweet| %>
   <p>
   <b><%= tweet.user.name %></b> @<%= tweet.user.handle %></br>
   <%= tweet.content %></br>

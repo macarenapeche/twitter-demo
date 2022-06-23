@@ -1,13 +1,13 @@
 class CommentsController < ApplicationController
   before_action :get_tweet
   before_action :set_comment, only: [:edit, :update, :destroy]
+  before_action :set_user_options, only: [:new, :create, :edit, :update]
 
   def index
     @comments = @tweet.comments
   end
 
   def new
-    @user_options = User.other_users_handle_id(@tweet.user_id)
     @comment = Comment.new
   end
 
@@ -21,11 +21,9 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    @user_options = User.other_users_handle_id(@tweet.user_id)
   end
 
   def update
-    @comment = Comment.find(params[:id])
     if @comment.update(comment_params)
       redirect_to @tweet
     else 
@@ -34,7 +32,6 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = Comment.find(params[:id])
     @comment.destroy
     redirect_to tweets_path, status: :see_other
   end
@@ -47,6 +44,10 @@ class CommentsController < ApplicationController
 
   def set_comment
     @comment = Comment.find(params[:id])
+  end
+
+  def set_user_options
+    @user_options = User.pluck(:handle, :id)
   end
 
   def comment_params

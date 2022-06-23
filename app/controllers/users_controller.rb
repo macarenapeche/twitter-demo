@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :followers, :following]
 
   def index
     @users = User.all
@@ -43,14 +42,12 @@ class UsersController < ApplicationController
   end
 
   def following
-    @user  = User.find(params[:id])
-    @follow = Follow.all.select { |follow| follow.follower_id == @user.id }
+    @follow = Follow.where(follower_id: @user.id).includes(:user)
     render 'show_following'
   end
 
   def followers
-    @user  = User.find(params[:id])
-    @follow = Follow.all.select { |follow| follow.user_id == @user.id }
+    @follow = Follow.where(user_id: @user.id).includes(:user)
     render 'show_followers'
   end
 

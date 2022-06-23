@@ -1,7 +1,7 @@
 <h1>Edit Tweet</h1>
 
 <% if @tweet.errors.any? %>
-  <p> The tweet couldn't be updated due to the following errors: 
+  <p> The request failed due to the following errors: 
     <ul>
       <% @tweet.errors.full_messages.each do |message| %>
         <li><%= message %></li>

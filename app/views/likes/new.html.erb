@@ -1,5 +1,16 @@
 <h1>Add Like</h1>
 
+<% if @like.errors.any? %>
+  <p> The request failed due to the following errors: 
+    <ul>
+      <% @like.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </p>
+<% end %>
+
+
 <%= form_with(model: [@tweet, @like], local: true) do |form| %>
 
   <%= select(:like, :user_id, @user_options) %>

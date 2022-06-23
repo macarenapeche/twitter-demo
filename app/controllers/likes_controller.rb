@@ -1,24 +1,18 @@
 class LikesController < ApplicationController
-  
   before_action :get_tweet
+  before_action :set_user_options, only: [:new, :create]
 
   def index
     @likes = @tweet.likes
   end
-
-  def show
-    @like = @tweet.find(params[:id])
-  end
-
+  
   def new
-    @user_options = User.all.map{ |u| [ u.handle, u.id ] }
     @like = @tweet.likes.build
   end
 
   def create
     @like = @tweet.likes.build(likes_params)
     if @like.save
-      redirect_to tweets_path
     else 
       render "new"
     end
@@ -36,6 +30,10 @@ class LikesController < ApplicationController
     @tweet = Tweet.find(params[:tweet_id])
   end
 
+  def set_user_options
+    @user_options = User.pluck(:handle, :id)
+  end
+  
   def likes_params
     params.require(:like).permit(:tweet_id, :user_id)
   end

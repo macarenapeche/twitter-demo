@@ -1,6 +1,6 @@
 class TweetsController < ApplicationController
   before_action :set_tweet, only: [:show, :edit, :update, :destroy]
-
+  before_action :set_user_options, only: [:new, :create, :edit, :update]
   def index
     @tweets = Tweet.all
   end
@@ -9,18 +9,17 @@ class TweetsController < ApplicationController
   end
 
   def new
-    @user_options = User.all.map{ |u| [ u.handle, u.id ] }
     @tweet = Tweet.new
   end
 
   def edit
-    @user_options = User.all.map{ |u| [ u.handle, u.id ] }
   end
 
 
   def create
     @tweet = Tweet.new(tweet_params)
     if @tweet.save
+      flash[:notice] = "Tweet successfully created"
       redirect_to @tweet
     else
       render 'new'
@@ -45,6 +44,10 @@ class TweetsController < ApplicationController
 
   def set_tweet
     @tweet = Tweet.find(params[:id])
+  end
+
+  def set_user_options
+    @user_options = User.pluck(:handle, :id)
   end
 
   def tweet_params

@@ -2,7 +2,7 @@ class FollowsController < ApplicationController
   before_action :get_user
 
   def new
-    @user_options = User.other_users_handle_id(@user.id)
+    @user_options = User.other_than(@user.id).pluck(:handle, :id)
     @follow = Follow.new
   end
 
