@@ -2,7 +2,7 @@ class FollowsController < ApplicationController
   before_action :get_user
 
   def new
-    @user_options = User.select{ |u| u != @user }.map{ |u| [ u.handle, u.id ] }
+    @user_options = User.other_users_handle_id(@user.id)
     @follow = Follow.new
   end
 

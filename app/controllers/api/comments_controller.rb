@@ -1,6 +1,7 @@
 module Api
   class CommentsController < ApplicationController
     before_action :get_tweet
+    before_action :set_comment, only: [:update, :destroy]
 
     def index
       @comments = @tweet.comments
@@ -17,7 +18,6 @@ module Api
     end
 
     def update
-      @comment = Comment.find(params[:id])
       if @comment.update(comment_params)
         render json: @comment
       else 
@@ -26,7 +26,6 @@ module Api
     end
 
     def destroy
-      @comment = Comment.find(params[:id])
       @comment.destroy
     end
 
@@ -36,6 +35,10 @@ module Api
       @tweet = Tweet.find(params[:tweet_id])
     end
 
+    def set_comment
+      @comment = Comment.find(params[:id])
+    end
+  
     def comment_params
       params.permit(:content, :tweet_id, :user_id)
     end
