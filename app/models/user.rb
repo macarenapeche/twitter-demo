@@ -20,5 +20,34 @@ class User < ApplicationRecord
   scope :with_tweets, -> { where("(SELECT COUNT(*) from tweets where tweets.user_id = users.id) > 0") }
   scope :without_tweets, -> { where("(SELECT COUNT(*) from tweets where tweets.user_id = users.id) = 0") }
   scope :other_than, -> (id) { User.where.not(id: id) }
+  
+  def self.average_tweets_per_day
+    tweet_count_table = Tweet.select(:id, :user_id, "DATE(created_at), COUNT(*) as tweets_count").group(:user_id, "DATE(created_at)")
+    User.from(tweet_count_table).group(:user_id).average("tweets_count")
+  end
+
+  def self.total_likes
+    User.left_joins(tweets: :likes).select("users.id, COUNT(likes.id) AS likes_count").group("users.id")
+    # User.left_joins(tweets: :likes).group(:id).count("likes.id")
+  end
+
+  def self.with_most_likes
+    User.find(
+      User.total_likes.order("COUNT(likes.id) DESC").first.id
+      # User.total_likes.max_by { |id, likes| likes }[0]
+    )
+  end
+
+  def self.total_comments
+    # User.left_joins(tweets: :likes).select("users.*, COUNT(likes.*) AS likes_count").group("users.id")
+    User.left_joins(tweets: :comments).group(:id).count("comments.id")
+  end
+
+  def self.with_most_comments
+    User.find(
+      # User.total_comments.order ("COUNT(comments.id").first.id
+      User.total_comments.max_by { |id, comments| comments }[0]
+    )
+  end
 
 end

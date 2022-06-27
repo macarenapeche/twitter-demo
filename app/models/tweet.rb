@@ -12,4 +12,18 @@ class Tweet < ApplicationRecord
   scope :created_in_time_range, ->(time_range) { where(created_at: time_range) }
   scope :recent, -> { created_in_time_range(7.day.ago..Time.now) }
   scope :today, -> { created_in_time_range(Time.now.midnight..Time.now) }
+
+
+  def likes_per_day
+    Tweet.joins(:likes).where(id: id).group("DATE(likes.created_at)").count
+  end
+
+  def self.likes_per_day
+    result = Hash.new()
+    Tweet.includes(:likes).each do |tweet|
+      result[tweet.id] = Tweet.joins(:likes).where(id: tweet.id).group("DATE(likes.created_at)").count
+    end
+    result
+  end
+
 end

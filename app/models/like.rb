@@ -8,4 +8,20 @@ class Like < ApplicationRecord
 
   scope :by_user, ->(user_id) { where(user_id: user_id) }
   scope :by_tweet, ->(tweet_id) { where(tweet_id: tweet_id) }
+
+  def self.average_per_day
+    likes_count_table = Like.select("DATE(created_at), COUNT(*) as likes_count").group("DATE(created_at)")
+    Like.from(likes_count_table).average("likes_count")
+  end
+
+  def self.average_per_user
+    likes_count_table = Like.select(:id, :user_id, "COUNT(*) as likes_count").group(:user_id)
+    Like.from(likes_count_table).average("likes_count")
+  end
+
+
+  def self.average_per_tweet
+    likes_count_table = Like.select(:id, :tweet_id, "COUNT(*) as likes_count").group(:tweet_id)
+    Like.from(likes_count_table).average("likes_count")
+  end
 end
