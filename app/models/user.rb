@@ -22,19 +22,21 @@ class User < ApplicationRecord
   scope :other_than, -> (id) { User.where.not(id: id) }
   
   def self.average_tweets_per_day
-    tweet_count_table = Tweet.select(:id, :user_id, "DATE(created_at), COUNT(*) as tweets_count").group(:user_id, "DATE(created_at)")
-    User.from(tweet_count_table).group(:user_id).average("tweets_count")
+    tweet_count_table = User.left_joins(:tweets)
+                             .select(:id, "DATE(tweets.created_at), COUNT(tweets.id) as tweets_count")
+                             .group(:id, "DATE(tweets.created_at)")
+    User.from(tweet_count_table).group(:id).average(:tweets_count)
   end
 
   def self.total_likes
-    User.left_joins(tweets: :likes).select("users.id, COUNT(likes.id) AS likes_count").group("users.id")
-    # User.left_joins(tweets: :likes).group(:id).count("likes.id")
+    # User.left_joins(tweets: :likes).select(:id, "COUNT(likes.id) AS likes_count").group(:id)
+    User.left_joins(tweets: :likes).group(:id).count("likes.id")
   end
 
   def self.with_most_likes
     User.find(
-      User.total_likes.order("COUNT(likes.id) DESC").first.id
-      # User.total_likes.max_by { |id, likes| likes }[0]
+      # User.total_likes.order("COUNT(likes.id) DESC").first.id
+      User.total_likes.max_by { |id, likes| likes }[0]
     )
   end
 

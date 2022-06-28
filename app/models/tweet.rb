@@ -15,15 +15,19 @@ class Tweet < ApplicationRecord
 
 
   def likes_per_day
-    Tweet.joins(:likes).where(id: id).group("DATE(likes.created_at)").count
+    Tweet.joins(:likes).where(id: id).group("DATE(likes.created_at)").count("likes.id")
   end
 
   def self.likes_per_day
-    result = Hash.new()
-    Tweet.includes(:likes).each do |tweet|
-      result[tweet.id] = Tweet.joins(:likes).where(id: tweet.id).group("DATE(likes.created_at)").count
+    # result = Hash.new()
+    # Tweet.includes(:likes).each do |tweet|
+    #   result[tweet.id] = tweet.likes_per_day
+    # end
+    # result
+
+    Tweet.includes(:likes).to_h do |tweet|
+      [tweet.id, tweet.likes_per_day]
     end
-    result
   end
 
 end
