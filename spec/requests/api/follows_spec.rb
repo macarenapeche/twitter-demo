@@ -19,7 +19,9 @@ RSpec.describe "Follow API" do
       end 
 
       it 'responds with correct data' do
-        expect(JSON.parse(result.body)).to include(hash_including("name"=>"follower", "handle"=>"follower","email"=>"follower@toptal.com"))
+        expect(JSON.parse(result.body)).to include(
+          hash_including("name"=>"follower", "handle"=>"follower","email"=>"follower@toptal.com")
+        )
       end
     end
 

@@ -20,7 +20,9 @@ RSpec.describe 'Likes API' do
         let!(:like) { Like.create(tweet_id: tweet.id, user_id: another_user.id) }
   
         it 'responds with correct data' do
-          expect(JSON.parse(result.body)).to match([hash_including("tweet_id" => tweet.id, "user_id" => another_user.id)])
+          expect(JSON.parse(result.body)).to match([
+            hash_including("tweet_id" => tweet.id, "user_id" => another_user.id)
+          ])
         end
       end
     end

@@ -19,7 +19,9 @@ RSpec.describe "Comments API" do
         let!(:comment) { Comment.create(content: "cool tweet", tweet_id: tweet.id, user_id: another_user.id) }
   
         it 'responds with correct data' do
-          expect(JSON.parse(result.body)).to match([hash_including("content" => "cool tweet", "tweet_id" => tweet.id, "user_id" => another_user.id)])
+          expect(JSON.parse(result.body)).to match([
+            hash_including("content" => "cool tweet", "tweet_id" => tweet.id, "user_id" => another_user.id)
+          ])
         end
       end
     end

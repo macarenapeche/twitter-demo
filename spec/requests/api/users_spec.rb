@@ -18,7 +18,9 @@ RSpec.describe 'Users API', type: :request do
       # it { expect(json).not_to be_empty }
       
       # UPDATE: DONE. REVIEW: If the lower spec works, the upper will work always so it's not that necessary
-      it { expect(json).to match([hash_including("name" => "Macarena", "handle" => "mapeciris", "email" => "macarena@toptal.com")]) }
+      it { expect(json).to match([
+        hash_including("name" => "Macarena", "handle" => "mapeciris", "email" => "macarena@toptal.com")
+        ]) }
     end
   end
 
@@ -159,7 +161,9 @@ RSpec.describe 'Users API', type: :request do
       it { expect(result).to have_http_status(200) }
 
       it 'returns the followers' do
-        expect(JSON.parse(result.body)).to include(hash_including("name"=>"follower", "handle"=>"follower", "email"=>"follower@toptal.com"))
+        expect(JSON.parse(result.body)).to include(
+          hash_including("name"=>"follower", "handle"=>"follower", "email"=>"follower@toptal.com")
+        )
       end
     end
 
@@ -183,7 +187,9 @@ RSpec.describe 'Users API', type: :request do
       it { expect(result).to have_http_status(200) }
 
       it 'returns the followings' do
-        expect(JSON.parse(result.body)).to include(hash_including("name"=>"following", "handle"=>"following", "email"=>"following@toptal.com"))
+        expect(JSON.parse(result.body)).to include(
+          hash_including("name"=>"following", "handle"=>"following", "email"=>"following@toptal.com")
+        )
       end
     end
 
