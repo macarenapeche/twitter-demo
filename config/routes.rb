@@ -33,4 +33,6 @@ Rails.application.routes.draw do
       resources :comments, only: %i[index create update destroy]
     end
   end
+
+  post "/graphql", to: "graphql#index"
 end
