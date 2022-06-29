@@ -5,7 +5,7 @@ module Mutations
 
     field :success, Boolean, null: false 
     field :errors, [String], null: false
-    field :follow, Types::FollowType
+    field :follow, Types::Follow
 
     def resolve(args)
       follow = Follow.new(args.to_h)

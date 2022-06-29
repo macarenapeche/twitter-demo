@@ -5,7 +5,7 @@ module Mutations
 
     field :success, Boolean, null: false 
     field :errors, [String], null: false
-    field :tweet, Types::TweetType
+    field :tweet, Types::Tweet
 
     def resolve(args)
       tweet = Tweet.new(args.to_h)

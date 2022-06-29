@@ -1,4 +1,4 @@
-RSpec.describe Types::UserType do
+RSpec.describe Types::User do
   include_context "when user exists"
   subject(:response) { Schema.execute(query, variables: variables).to_h }
 

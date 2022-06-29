@@ -56,7 +56,7 @@ RSpec.describe 'Users API', type: :request do
 
       it 'returns a failure message' do
         expect(JSON.parse(response.body)).to match({
-          "name"=>["can't be blank", "is too short (minimum is 2 characters)"],
+          "name"=>["can't be blank"],
           "handle"=>["can't be blank", "is invalid"],
           "email"=>["can't be blank", "is invalid"]
         }) 
@@ -122,7 +122,7 @@ RSpec.describe 'Users API', type: :request do
 
       it 'returns a failure message' do
         expect(JSON.parse(response.body)).to match({
-          "name"=>["can't be blank", "is too short (minimum is 2 characters)"],
+          "name"=>["can't be blank"],
         }) # UPDATE: DONE. REVIEW: check the body more precisely with JSON.parse and etc 
       end
     end

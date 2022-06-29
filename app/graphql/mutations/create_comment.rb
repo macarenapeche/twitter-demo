@@ -6,7 +6,7 @@ module Mutations
 
     field :success, Boolean, null: false 
     field :errors, [String], null: false
-    field :comment, Types::CommentType
+    field :comment, Types::Comment
 
     def resolve(args)
       comment = Comment.new(args.to_h)

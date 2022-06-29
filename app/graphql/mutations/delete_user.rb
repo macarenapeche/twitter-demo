@@ -2,15 +2,23 @@ module Mutations
   class DeleteUser < GraphQL::Schema::Mutation 
     argument :id, ID, required: true
 
-    field :id, ID, null: false
     field :success, Boolean, null: false
     field :errors, [String], null: false
+    field :user, Types::User, null: true
 
-    def resolve(id: nil)
-      user = User.find(id)
-      user.destroy
+    def resolve(args)
+      user = User.find(args[:id])
+      success = user.destroy
       {
-        id: id
+        success: success,
+        errors: [],
+        user: user
+      }
+    rescue ActiveRecord::RecordNotFound => e
+      {
+        success: false, 
+        errors: ["#{e}"],
+        user: nil
       }
     end
   end

@@ -1,4 +1,4 @@
-RSpec.describe Types::TweetType do
+RSpec.describe Types::Tweet do
   include_context "when user exists"
   include_context "when tweet exists"
   subject(:response) { Schema.execute(query, variables: variables).to_h }

@@ -5,7 +5,7 @@ module Mutations
 
     field :success, Boolean, null: false
     field :errors, [String], null: false
-    field :like, Types::LikeType
+    field :like, Types::Like
 
     def resolve(args)
       like = Like.new(args.to_h)

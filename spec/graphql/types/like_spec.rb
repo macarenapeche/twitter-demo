@@ -1,4 +1,4 @@
-RSpec.describe Types::LikeType do
+RSpec.describe Types::Like do
   include_context "when user exists"
   include_context "when tweet exists"
   subject(:response) { Schema.execute(query, variables: variables).to_h }
