@@ -1,5 +1,5 @@
 module Inputs 
-  class User < GraphQL::Schema::InputObjects
+  class User < GraphQL::Schema::InputObject
     graphql_name "UserInput"
     
     argument :name, String, required: true

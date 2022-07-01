@@ -7,7 +7,7 @@ module Mutations
     field :user, Types::User
 
     def resolve(args)
-      user = User.new(args.to_h)
+      user = User.new(args[:input].to_h)
       success = user.save
       {
         success: success,
