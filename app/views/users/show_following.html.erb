@@ -3,7 +3,7 @@
 <ul>
   <% @follow.each do |follow| %>
     <li>@<%= follow.user.handle %>
-    <%= button_to "Remove", user_follow_path(@user, follow), method: :delete, form: {style: 'display:inline-block;'} %>
+    <%= button_to "Remove", user_follow_path(@user, follow), method: :delete, form: {style: 'display:inline-block;'} if @current_user == @user %>
     </li>
   <% end %>
 </ul>

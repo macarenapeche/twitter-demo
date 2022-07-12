@@ -1,5 +1,5 @@
 class FollowsController < ApplicationController
-  before_action :get_user
+  before_action :get_user, :require_user_logged_in!
 
   def new
     @user_options = User.other_than(@user.id).pluck(:handle, :id)

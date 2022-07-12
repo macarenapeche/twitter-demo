@@ -1,5 +1,5 @@
 RSpec.shared_context 'when user exists' do
-  let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
+  let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password") }
   let!(:user_id) { user.id }
 end
 

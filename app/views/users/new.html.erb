@@ -21,11 +21,17 @@
   <%= form.label :email, "Email:" %></br>
   <%= form.text_field :email %></br></br>
 
+  <%= form.label :password, "Password:" %></br>
+  <%= form.password_field :password %></br></br>
+
+  <%= form.label :password_confirmation, "Retype password:" %></br>
+  <%= form.password_field :password_confirmation %></br></br>
+
   <%= form.label :bio, "Bio:" %></br>
   <%= form.text_area :bio, size: "40x10" %></br></br>
 
-  <%= form.submit %>
+  <%= form.submit "Sign Up" %>
 <% end %>
 </p>
 
-<p><%= link_to "Back", users_path %></p>
+<p><%= link_to "Back", root_path %></p>

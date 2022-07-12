@@ -1,6 +1,8 @@
 class TweetsController < ApplicationController
+  before_action :require_user_logged_in!, only: [:new, :create, :edit, :update, :destroy]
   before_action :set_tweet, only: [:show, :edit, :update, :destroy]
   before_action :set_user_options, only: [:new, :create, :edit, :update]
+
   def index
     @tweets = Tweet.all
   end
@@ -17,7 +19,7 @@ class TweetsController < ApplicationController
 
 
   def create
-    @tweet = Tweet.new(tweet_params)
+    @tweet = @current_user.tweets.new(tweet_params)
     if @tweet.save
       flash[:notice] = "Tweet successfully created"
       redirect_to @tweet

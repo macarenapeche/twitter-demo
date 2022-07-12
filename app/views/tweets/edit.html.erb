@@ -12,9 +12,6 @@
 
 <p>
 <%= form_with model: @tweet do |form| %>
-  Author: 
-  <%= select(:tweet, :user_id, @user_options) %>
-  </br></br>
   <%= form.label :content, "Content:" %></br>
   <%= form.text_area :content, size: "40x10" %></br></br>
 

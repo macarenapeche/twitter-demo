@@ -1,5 +1,5 @@
 class LikesController < ApplicationController
-  before_action :get_tweet
+  before_action :get_tweet, :require_user_logged_in!
   before_action :set_user_options, only: [:new, :create]
 
   def index

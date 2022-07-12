@@ -9,7 +9,13 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    if @current_user 
+      flash[:notice] = "You cannot create a new user while logged in"
+      redirect_to root_path
+    else 
+      @user = User.new
+    end
+      
   end
 
   def edit
@@ -20,6 +26,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       flash[:notice] = "User successfully created"
+      session[:user_id] = @user.id
       redirect_to @user
     else
       render 'new'
@@ -58,7 +65,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :handle, :email, :bio)
+    params.require(:user).permit(:name, :handle, :email, :password, :password_confirmation, :bio)
   end
 
 end

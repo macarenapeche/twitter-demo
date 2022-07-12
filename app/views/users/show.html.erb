@@ -1,9 +1,11 @@
 <h1>User Profile</h1>
 
+<% if @current_user == @user %>
 <p>
-  <%= button_to "Edit profile", edit_user_path(@user), method: :get,form: {style: 'display:inline-block;'}%>
+  <%= button_to "Edit profile", edit_user_path(@user), method: :get,form: {style: 'display:inline-block;'} %>
   <%= button_to "Delete profile", user_path(@user), method: :delete, form: {style: 'display:inline-block;'} %>
 </p>
+<% end %>
 
 <p>
 <b>Name:</b> <%= @user.name %> </br>
@@ -13,7 +15,7 @@
 </p>
 
 <p>
-  <%= button_to "Follow", new_user_follow_path(@user), method: :get, form: {style: 'display:inline-block;'} %> 
+  <%= button_to "Follow", new_user_follow_path(@user), method: :get, form: {style: 'display:inline-block;'} if @current_user != @user %> 
   <%= button_to "Followers (#{@user.followers.count})", followers_user_path(@user), method: :get,form: {style: 'display:inline-block;'}%>
   <%= button_to "Following (#{@user.following.count})", following_user_path(@user), method: :get,form: {style: 'display:inline-block;'}%>
 </p>
@@ -25,8 +27,10 @@
   <p>
   <%= tweet.content %></br>
   <%= tweet.created_at %>
-  <%= button_to "Edit", edit_tweet_path(tweet), method: :get,form: {style: 'display:inline-block;'}%>
-  <%= button_to "Delete", tweet_path(tweet), method: :delete, form: {style: 'display:inline-block;'} %>
+  <% if @current_user == @user %>
+    <%= button_to "Edit", edit_tweet_path(tweet), method: :get,form: {style: 'display:inline-block;'}%>
+    <%= button_to "Delete", tweet_path(tweet), method: :delete, form: {style: 'display:inline-block;'} %>
+  <% end %>
   </p>
 <% end %>
 
