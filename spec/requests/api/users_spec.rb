@@ -12,7 +12,7 @@ RSpec.describe 'Users API', type: :request do
     specify { expect(JSON.parse(result.body)).to eq([]) }
 
     context 'when has users' do
-      let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
+      include_context "when user exists"
       let(:json) { JSON.parse(result.body) }
 
       # it { expect(json).not_to be_empty }
@@ -31,7 +31,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when the request is valid' do
-      let(:valid_params) { { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com" } }
+      let(:valid_params) { { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } }
 
       it { is_expected.to have_http_status(201) }
 
@@ -58,7 +58,8 @@ RSpec.describe 'Users API', type: :request do
         expect(JSON.parse(response.body)).to match({
           "name"=>["can't be blank"],
           "handle"=>["can't be blank", "is invalid"],
-          "email"=>["can't be blank", "is invalid"]
+          "email"=>["can't be blank", "is invalid"],
+          "password"=>["can't be blank"]
         }) 
       end
 
@@ -154,7 +155,7 @@ RSpec.describe 'Users API', type: :request do
 
     context 'when user exists' do
       include_context 'when user exists'
-      let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@toptal.com") }
+      let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@toptal.com", password: "password") }
       let!(:follow) { Follow.create(user_id: user.id, follower_id: follower.id) }
 
 
@@ -180,7 +181,7 @@ RSpec.describe 'Users API', type: :request do
 
     context 'when user exists' do
       include_context 'when user exists'
-      let!(:following) { User.create(name: "following", handle: "following", email: "following@toptal.com") }
+      let!(:following) { User.create(name: "following", handle: "following", email: "following@toptal.com", password: "password") }
       let!(:follow) { Follow.create(user_id: following.id, follower_id: user.id) }
 
 

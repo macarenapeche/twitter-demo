@@ -16,7 +16,7 @@ RSpec.describe Mutations::UpdateComment do
       }
     }
   GRAPHQL
-  let!(:another_user) { User.create(name: "user", handle: "handle", email: "email@gmail.com") }
+  let!(:another_user) { User.create(name: "user", handle: "handle", email: "email@gmail.com", password: "password") }
 
   context "when comment exists" do
     

@@ -14,7 +14,7 @@ RSpec.describe Types::Comment do
     }
   GRAPHQL
   let!(:variables) { {id: comment.id} }
-  let!(:another_user) { User.create(name: "user", handle: "user", email: "email@gmail.com") }
+  let!(:another_user) { User.create(name: "user", handle: "user", email: "email@gmail.com", password: "password") }
   let!(:comment) { Comment.create(tweet_id: tweet.id, user_id: another_user.id, content: "cool tweet") }
 
   it "returns the correct data" do

@@ -14,7 +14,7 @@ RSpec.describe Mutations::DeleteFollow do
       }
     }
   GRAPHQL
-  let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@gmail.com") }
+  let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@gmail.com", password: "password") }
   
   context "when follow exists" do
     let!(:follow) { Follow.create(user_id: user.id, follower_id: follower.id) }

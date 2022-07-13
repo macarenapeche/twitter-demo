@@ -6,5 +6,6 @@ module Inputs
     argument :handle, String, required: true
     argument :email, String, required: true
     argument :bio, String, required: false 
+    argument :password, String, required: true
   end
 end

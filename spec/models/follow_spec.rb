@@ -1,7 +1,7 @@
 RSpec.describe Follow, type: :model do
   describe 'validations' do
-    let!(:first_user) { User.create(name: "first", handle: "first", email: "first@toptal.com") }
-    let!(:second_user) { User.create(name: "second", handle: "second", email: "second@toptal.com") }
+    let!(:first_user) { User.create(name: "first", handle: "first", email: "first@toptal.com", password: "password") }
+    let!(:second_user) { User.create(name: "second", handle: "second", email: "second@toptal.com", password: "password") }
     let!(:follow) { Follow.create(user_id: first_user.id, follower_id: second_user.id) }
 
     it { is_expected.to validate_presence_of(:user_id) }

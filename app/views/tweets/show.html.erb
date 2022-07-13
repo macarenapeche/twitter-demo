@@ -12,9 +12,10 @@
 </p>
 
 <p>
-  <%= button_to "Like", new_tweet_like_path(@tweet), method: :get, form: {style: 'display:inline-block;'} %>
+  <%= button_to "Like", tweet_likes_path(@tweet), method: :post, form: {style: 'display:inline-block;'} if @current_user && !@tweet.liked_by?(@current_user) %>
+  <%= button_to "Unlike", tweet_like_path(@tweet, Like.find_by(tweet_id: @tweet.id, user_id: @current_user.id)), method: :delete, form: {style: 'display:inline-block;'} if @current_user && @tweet.liked_by?(@current_user) %>
   <%= button_to "Likes (#{@tweet.likes.count})", tweet_likes_path(@tweet), method: :get, form: {style: 'display:inline-block;'}%>
-  <%= button_to "Comment", new_tweet_comment_path(@tweet), method: :get, form: {style: 'display:inline-block;'} %>
+  <%= button_to "Comment", new_tweet_comment_path(@tweet), method: :get, form: {style: 'display:inline-block;'} if @current_user %>
 </p>
 
 <h2>Comments <%= "(#{@tweet.comments.count})" %></h2>

@@ -22,7 +22,7 @@ RSpec.describe User, type: :model do
   describe "scopes" do
     include_context "when user exists"
     include_context "when tweet exists"
-    let!(:dog) { User.create(name: "Tokyo", handle: "iamadog", email: "doggie@gmail.com") }
+    let!(:dog) { User.create(name: "Tokyo", handle: "iamadog", email: "doggie@gmail.com", password: "password") }
   
     describe ".handle_starting_by" do
       it "includes users with handle starting with given expression" do

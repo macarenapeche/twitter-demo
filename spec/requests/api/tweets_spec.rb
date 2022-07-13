@@ -1,6 +1,6 @@
 RSpec.describe 'Tweets API', type: :request do
-  let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-
+  include_context "when user exists" 
+  
   describe 'GET /api/tweets' do
     subject(:result) do
       get "/api/tweets"

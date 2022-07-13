@@ -15,7 +15,7 @@ RSpec.describe Mutations::CreateLike do
       }
     }
   GRAPHQL
-  let!(:another_user) { User.create(name: "user", handle: "handle", email: "email@gmail.com") }
+  let!(:another_user) { User.create(name: "user", handle: "handle", email: "email@gmail.com", password: "password") }
 
   context "when input is valid" do
     let!(:variables) { {tweetId: tweet.id, userId: another_user.id } }

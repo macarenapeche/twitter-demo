@@ -14,7 +14,7 @@ RSpec.describe Mutations::CreateFollow do
       }
     }
   GRAPHQL
-  let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@gmail.com") }
+  let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@gmail.com", password: "password") }
 
   context "when input is valid" do
     let!(:variables) { {userId: user.id, followerId: follower.id } }

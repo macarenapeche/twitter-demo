@@ -1,6 +1,6 @@
 RSpec.describe "Comments API" do
-  let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-  let!(:another_user) { User.create(name: "name", handle: "handle", email: "email@domain.com") }
+  include_context "when user exists"
+  let!(:another_user) { User.create(name: "name", handle: "handle", email: "email@domain.com", password: "password") }
 
   describe 'GET /api/tweets/:tweet_id/comments' do
     subject(:result) do

@@ -1,7 +1,7 @@
 RSpec.describe 'Likes API' do
-  let!(:user) { User.create(name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com") }
-  let!(:another_user) { User.create(name: "name", handle: "handle", email: "email@domain.com") }
-  let!(:tweet) { Tweet.create(content: "some content", user_id: user.id) }
+  include_context "when user exists"
+  include_context "when tweet exists"
+  let!(:another_user) { User.create(name: "name", handle: "handle", email: "email@domain.com", password: "password") }
 
   describe "GET /api/tweets/:tweet_id/likes" do
     subject(:result) do

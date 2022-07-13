@@ -13,7 +13,7 @@ RSpec.describe Types::Like do
     }
   GRAPHQL
   let!(:variables) { {id: like.id} }
-  let!(:another_user) { User.create(name: "user", handle: "user", email: "email@gmail.com") }
+  let!(:another_user) { User.create(name: "user", handle: "user", email: "email@gmail.com", password: "password") }
   let!(:like) { Like.create(tweet_id: tweet.id, user_id: another_user.id) }
 
   it "returns the correct data" do

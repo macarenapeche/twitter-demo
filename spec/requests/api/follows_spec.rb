@@ -1,7 +1,7 @@
 RSpec.describe "Follow API" do
   include_context 'when user exists'
 
-  let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@toptal.com") }
+  let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@toptal.com", password: "password") }
 
   describe "POST /api/users/:user_id/follows" do
     subject(:result) do

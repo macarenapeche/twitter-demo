@@ -15,7 +15,7 @@ RSpec.describe Mutations::CreateUser do
       }
     }
   GRAPHQL
-  let!(:variables) { {input: {name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com"}} }
+  let!(:variables) { {input: {name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password"}} }
 
   context "when input is valid" do
     it "returns the correct data" do

@@ -2,7 +2,7 @@ RSpec.describe Mutations::DeleteComment do
   include_context "when user exists"
   include_context "when tweet exists"
   subject(:response) { Schema.execute(mutation, variables: variables).to_h }
-  let!(:another_user) { User.create(name: "user", handle: "handle", email: "email@gmail.com") }
+  let!(:another_user) { User.create(name: "user", handle: "handle", email: "email@gmail.com", password: "password") }
   let!(:comment) { Comment.create(content: "comment", tweet_id: tweet.id, user_id: another_user.id) }
   let!(:mutation) {<<~GRAPHQL}
     mutation($id: ID!){

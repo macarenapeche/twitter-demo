@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   def new
     if @current_user 
       flash[:notice] = "You cannot create a new user while logged in"
-      redirect_to root_path
+      redirect_to root_path, status: :forbidden
     else 
       @user = User.new
     end
@@ -19,23 +19,29 @@ class UsersController < ApplicationController
   end
 
   def edit
+    if @current_user != @user 
+      flash[:notice] = "You cannot update another user's information"
+      redirect_to @user, status: :forbidden
+    end
   end
 
 
   def create
-    @user = User.new(user_params)
-    if @user.save
+    if @current_user 
+      redirect_to root_path, status: :forbidden
+    elsif @user = User.new(user_params) && @user.save
       flash[:notice] = "User successfully created"
       session[:user_id] = @user.id
       redirect_to @user
     else
       render 'new'
     end
-
   end
 
   def update
-    if @user.update(user_params)
+    if @current_user != @user 
+      redirect_to @user, status: :forbidden
+    elsif @user.update(user_params)
       flash[:notice] = "User successfully updated"
       redirect_to @user
     else
@@ -44,8 +50,12 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user.destroy
-    redirect_to users_path, status: :see_other
+    if @current_user != @user
+      redirect_to users_path, status: :forbidden
+    else
+      @user.destroy
+      redirect_to users_path, status: :see_other
+    end
   end
 
   def following

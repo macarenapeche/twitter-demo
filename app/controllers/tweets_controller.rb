@@ -15,6 +15,10 @@ class TweetsController < ApplicationController
   end
 
   def edit
+    if @current_user != @tweet.user 
+      flash[:notice] = "You cannot update another user's tweets"
+      redirect_to @tweet, status: :forbidden 
+    end
   end
 
 
@@ -30,7 +34,9 @@ class TweetsController < ApplicationController
   end
 
   def update
-    if @tweet.update(tweet_params)
+    if @current_user != @tweet.user 
+      redirect_to @tweet, status: :forbidden 
+    elsif @tweet.update(tweet_params)
       redirect_to @tweet
     else
       render 'edit'
@@ -38,8 +44,12 @@ class TweetsController < ApplicationController
   end
 
   def destroy
-    @tweet.destroy
-    redirect_to tweets_path, status: :see_other
+    if @current_user != @tweet.user 
+      redirect_to tweets_path, status: :forbidden 
+    else
+      @tweet.destroy
+      redirect_to tweets_path, status: :see_other
+    end
   end
 
   private

@@ -12,7 +12,7 @@ RSpec.describe Types::Follow do
     } 
   GRAPHQL
   let!(:variables) { {id: follow.id} }
-  let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@gmail.com") }
+  let!(:follower) { User.create(name: "follower", handle: "follower", email: "follower@gmail.com", password: "password") }
   let!(:follow) { Follow.create(user_id: user.id, follower_id: follower.id) }
 
   it "returns the correct data" do
