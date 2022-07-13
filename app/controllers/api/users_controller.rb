@@ -1,6 +1,8 @@
 module Api
   class UsersController < ApplicationController
     before_action :set_user, only: [:show, :update, :destroy, :followers, :following]
+    before_action :authorize_request, only: [:create, :update, :destroy]
+    before_action :forbidden_action, only: [:update, :destroy]
 
     def index
       @users = User.all
@@ -18,17 +20,21 @@ module Api
     end
 
     def create
-      @user = User.create(user_params)
-      if @user.save
-        render json: @user, status: :created
-      else
-        render json: @user.errors, status: :unprocessable_entity
+      if @current_user
+        render json: { "errors": "Users cannot be created while logged in"}, status: :unauthorized
+      else 
+        @user = User.create(user_params)
+        if @user.save
+          render json: @user, status: :created
+        else
+          render json: @user.errors, status: :unprocessable_entity
+        end
       end
     end
 
     def update
       if @user.update(user_params)
-        render json: @user
+        render json: @user.reload
       else
         render json: @user.errors, status: :unprocessable_entity
       end
@@ -53,7 +59,12 @@ module Api
     end
 
     def user_params
-      params.permit(:name, :handle, :email, :password, :bio)
+      params.permit(:name, :handle, :email, :password, :password_confirmation, :bio)
     end
+
+    def forbidden_action
+      render json: { "errors": "Unathorized"}, status: :unauthorized if @current_user != @user 
+    end
+
   end
 end

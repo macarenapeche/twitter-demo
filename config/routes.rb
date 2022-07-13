@@ -39,6 +39,9 @@ Rails.application.routes.draw do
       resources :likes, only: %i[index create destroy]
       resources :comments, only: %i[index create update destroy]
     end
+
+    post "/login", to: "authentication#login"
+    get "/logged_user", to: "authentication#logged_user"
   end
 
   post "/graphql", to: "graphql#index"

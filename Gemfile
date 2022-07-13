@@ -7,6 +7,8 @@ gem "graphql"
 
 gem "bcrypt"
 
+gem 'jwt'
+
 gem "active_model_serializers"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
