@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   get "/log_out", to: "sessions#destroy", as: "log_out"
 
   resources :users do
-    resources :follows, only: %i[new create destroy]
+    resources :follows, only: %i[create destroy]
     member do
       get :following, :followers
     end

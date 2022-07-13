@@ -1,21 +1,19 @@
 class FollowsController < ApplicationController
   before_action :get_user, :require_user_logged_in!
 
-  def new
-    @user_options = User.other_than(@user.id).pluck(:handle, :id)
-    @follow = Follow.new
-  end
-
   def create
-    @follower = User.find(follow_params[:follower_id])
-    @user.followers << @follower unless @user.followers.include?(@follower)
-    redirect_to followers_user_path(@user)
+    @user.followers << @current_user unless @user.followers.include?(@current_user)
+    redirect_back fallback_location: root_path
   end 
 
   def destroy
     @follow = Follow.find(params[:id])
-    @follow.destroy if @user
-    redirect_to followers_user_path(@user),  status: :see_other
+    if @current_user.id != @follow.follower_id
+      redirect_back fallback_location: root_path, status: :forbidden
+    else
+      @follow.destroy
+      redirect_back fallback_location: root_path, status: :see_other
+    end
   end
   
   private 

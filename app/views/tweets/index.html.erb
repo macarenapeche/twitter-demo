@@ -11,9 +11,14 @@
 <% popular_tweets = Tweet.popular(10).includes(:user) %>
 <% popular_tweets.each do |tweet| %>
   <p>
-  <b><%= tweet.user.name %></b> @<%= tweet.user.handle %></br>
+  <b><%= link_to "#{tweet.user.name}", user_path(tweet.user) %></b> @<%= tweet.user.handle %></br>
   <%= tweet.content %></br>
   <%= tweet.created_at %>
+  <% if @current_user == tweet.user %>
+  <%= button_to "Edit", edit_tweet_path(tweet), method: :get,form: {style: 'display:inline-block;'} %>
+  <%= button_to "Delete", tweet_path(tweet), method: :delete, form: {style: 'display:inline-block;'} %>
+  </br></br>
+  <% end %>
   <%= button_to "Like", tweet_likes_path(tweet), method: :post, form: {style: 'display:inline-block;'} if @current_user && !tweet.liked_by?(@current_user) %>
   <%= button_to "Unlike", tweet_like_path(tweet, Like.find_by(tweet_id: tweet.id, user_id: @current_user.id)), method: :delete, form: {style: 'display:inline-block;'} if @current_user && tweet.liked_by?(@current_user) %>
   <%= button_to "Likes (#{tweet.likes.count})", tweet_likes_path(tweet), method: :get, form: {style: 'display:inline-block;'}%>

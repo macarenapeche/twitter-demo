@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
-  before_action :get_tweet, :require_user_logged_in!
+  before_action :get_tweet
+  before_action :require_user_logged_in!, except: :index
   before_action :set_comment, only: [:edit, :update, :destroy]
-  before_action :set_user_options, only: [:new, :create, :edit, :update]
 
   def index
     @comments = @tweet.comments
@@ -14,6 +14,7 @@ class CommentsController < ApplicationController
 
   def create
     @comment = @tweet.comments.build(comment_params)
+    @comment.user_id = @current_user.id
     if @comment.save
       redirect_to @tweet
     else 
@@ -47,11 +48,7 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
   end
 
-  def set_user_options
-    @user_options = User.pluck(:handle, :id)
-  end
-
   def comment_params
-    params.require(:comment).permit(:content, :tweet_id, :user_id)
+    params.require(:comment).permit(:content, :tweet_id)
   end
 end
