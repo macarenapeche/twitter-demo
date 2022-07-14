@@ -1,5 +1,6 @@
 RSpec.describe 'Tweets API', type: :request do
   include_context "when user exists" 
+  let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
   
   describe 'GET /api/tweets' do
     subject(:result) do
@@ -15,16 +16,25 @@ RSpec.describe 'Tweets API', type: :request do
       include_context 'when tweet exists' 
 
       it 'shows tweet attributes' do
-        expect(JSON.parse(result.body)).to match([hash_including("content" => "some content", "user_id" => user.id)])
+        expect(JSON.parse(result.body)).to match([hash_including(
+          "content" => "some content", 
+          "user_id" => user.id
+        )])
       end
     end
   end
 
   describe 'POST /api/tweets' do
     subject(:result) do 
-      post "/api/tweets", params: valid_params
+      post "/api/tweets", params: valid_params, headers: { "Authorization": token }
       response
     end
+
+    context "when there is no logged in user" do
+      include_examples "no logged in user"
+      let(:valid_params) { { content: "some content", user_id: user.id } }
+    end
+
 
     context 'when request is valid' do
       let(:valid_params) { { content: "some content", user_id: user.id } }
@@ -43,15 +53,13 @@ RSpec.describe 'Tweets API', type: :request do
     end
 
     context 'when request is invalid' do
-      before { post '/api/tweets', params: {} }
+      before { post '/api/tweets', params: {content: ""}, headers: { "Authorization": token } }
       
       it { expect(response).to have_http_status(422) }
 
       it 'returns a failure message' do
         expect(JSON.parse(response.body)).to match({
-          "content"=>["can't be blank"],
-          "user"=>["must exist"],
-          "user_id"=>["can't be blank"]
+          "content"=>["can't be blank"]
         }) 
       end
 
@@ -89,8 +97,27 @@ RSpec.describe 'Tweets API', type: :request do
     include_context 'when tweet exists'
 
     subject(:result) do
-      put "/api/tweets/#{tweet_id}", params: { content: "content - edited" }
+      put "/api/tweets/#{tweet_id}", params: { content: "content - edited"},
+                                     headers: { "Authorization": token }
       response
+    end
+
+    context "when there is no logged in user" do
+      include_examples "no logged in user"
+    end
+
+
+    context "when another user sends the request" do
+      let!(:another_user) { User.create(name: "name",handle: "handle", email: "email@gmail.com", password: "password")}
+      let!(:token) { Api::JsonWebToken.encode(user_id: another_user.id) }
+
+      it { is_expected.to have_http_status(401) }
+
+      it "returns an error" do
+        expect(JSON.parse(result.body)).to eq({
+          "errors" => "Unauthorized"
+        })
+      end
     end
 
     context 'when the request is valid' do
@@ -106,7 +133,11 @@ RSpec.describe 'Tweets API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { put "/api/tweets/#{tweet_id}", params: { content: "" }; response }
+      before do 
+        put "/api/tweets/#{tweet_id}", params: { content: "" }, 
+                                       headers: { "Authorization": token } 
+        response 
+      end
 
       specify { expect(response).to have_http_status(422) }
 
@@ -124,12 +155,29 @@ RSpec.describe 'Tweets API', type: :request do
 
   describe 'DELETE /api/tweets/:id' do
     include_context 'when tweet exists'
-    let!(:result) { delete "/api/tweets/#{tweet_id}"; response }
+    let!(:result) { delete "/api/tweets/#{tweet_id}", headers: { "Authorization": token }; response }
 
     specify { expect(result).to have_http_status(204) }
 
     context 'when tweet does not exist' do
       include_examples 'tweet does not exist'
+    end
+
+    context "when there is no logged in user" do
+      include_examples "no logged in user"
+    end
+
+    context "when another user sends the request" do
+      let!(:another_user) { User.create(name: "name",handle: "handle", email: "email@gmail.com", password: "password")}
+      let!(:token) { Api::JsonWebToken.encode(user_id: another_user.id) }
+
+      it { expect(result).to have_http_status(401) }
+
+      it "returns an error" do
+        expect(JSON.parse(result.body)).to eq({
+          "errors" => "Unauthorized"
+        })
+      end
     end
   end
 end

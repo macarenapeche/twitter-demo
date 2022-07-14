@@ -1,6 +1,8 @@
 module Api
   class LikesController < ApplicationController
     before_action :get_tweet
+    before_action :authorize_request, only: [:create, :destroy]
+    before_action :get_like, :forbidden_action, only: [:destroy]
 
     def index
       @likes = @tweet.likes
@@ -17,7 +19,6 @@ module Api
     end
 
     def destroy
-      @like = Like.find(params[:id])
       @like.destroy
     end
 
@@ -27,8 +28,16 @@ module Api
       @tweet = Tweet.find(params[:tweet_id])
     end
 
+    def get_like
+      @like = Like.find(params[:id])
+    end
+
     def likes_params
       params.permit(:tweet_id, :user_id)
+    end
+
+    def forbidden_action
+      render json: { "errors": "Unauthorized" }, status: :unauthorized if @current_user.id != @like.user_id 
     end
   end
 end

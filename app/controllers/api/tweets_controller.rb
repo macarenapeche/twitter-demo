@@ -1,6 +1,9 @@
 module Api
   class TweetsController < ApplicationController
     before_action :set_tweet, only: [:show, :update, :destroy]
+    before_action :authorize_request, only: [:create, :update, :destroy]
+    before_action :forbidden_action, only: [:update, :destroy]
+
     
     def index
       @tweets = Tweet.all
@@ -13,6 +16,7 @@ module Api
 
     def create
       @tweet = Tweet.create(tweet_params)
+      @tweet.user_id = @current_user.id
       if @tweet.save
         render json: @tweet, status: :created
       else
@@ -41,7 +45,12 @@ module Api
     end
     
     def tweet_params
-      params.permit(:content, :user_id)
+      params.permit(:content)
+    end
+
+
+    def forbidden_action
+      render json: { "errors": "Unauthorized" }, status: :unauthorized if @current_user != @tweet.user
     end
   end
 end

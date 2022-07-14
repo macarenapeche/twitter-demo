@@ -1,9 +1,9 @@
 module Api 
   class ApplicationController < ActionController::API
-    def not_found
-      render json: { error: 'not_found' }
+    rescue_from ActiveRecord::RecordNotFound do |e|
+      render json: { error: e }, status: :not_found
     end
-  
+
     def authorize_request
       header = request.headers['Authorization']
       header = header.split(' ').last if header
@@ -13,13 +13,8 @@ module Api
       rescue ActiveRecord::RecordNotFound => e
         render json: { errors: e.message }, status: :unauthorized
       rescue JWT::DecodeError => e
-        nil
+        render json: { errors: e.message }, status: :unauthorized
       end
-    end
-
-
-    rescue_from ActiveRecord::RecordNotFound do |e|
-      render json: { error: e }, status: :not_found
     end
   end
 end

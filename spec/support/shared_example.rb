@@ -31,3 +31,15 @@ RSpec.shared_examples 'comment does not exist' do
     expect(JSON.parse(result.body)).to eq("error" => "Couldn't find Comment with 'id'=0")
   end
 end
+
+RSpec.shared_examples "no logged in user" do
+  let!(:token) { nil }
+
+  it { expect(result).to have_http_status(401) }
+
+  it "returns an error" do
+    expect(JSON.parse(result.body)).to eq({
+      "errors" => "Nil JSON web token"
+    })
+  end
+end

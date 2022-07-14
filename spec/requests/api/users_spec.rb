@@ -30,23 +30,23 @@ RSpec.describe 'Users API', type: :request do
       response
     end
 
-    context "when user is logged in" do
-      include_context "when user exists" 
-      let(:valid_params) {{ user: { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } }}
-      let(:headers) { { "Authorization": token } }
-      let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
+    # context "when user is logged in" do
+    #   include_context "when user exists" 
+    #   let(:valid_params) {{ user: { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } }}
+    #   let(:headers) { { "Authorization": token } }
+    #   let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
 
-      it { is_expected.to have_http_status(401) }
+    #   it { is_expected.to have_http_status(401) }
 
-      it "returns an error" do
-        expect(JSON.parse(result.body)).to eq({
-          "errors" => "Users cannot be created while logged in"
-        })
-      end
-    end
+    #   it "returns an error" do
+    #     expect(JSON.parse(result.body)).to eq({
+    #       "errors" => "Users cannot be created while logged in"
+    #     })
+    #   end
+    # end
 
     context 'when the request is valid' do
-      let(:valid_params) {{ user: { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } }}
+      let(:valid_params) { { user: { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } } }
 
       it { is_expected.to have_http_status(201) }
 
@@ -114,21 +114,14 @@ RSpec.describe 'Users API', type: :request do
     include_context 'when user exists'
 
     subject(:result) do
-      put "/api/users/#{user_id}", params: { user: { name: "Macarena Peche" } }, headers: { "Authorization": token }
+      put "/api/users/#{user_id}", params: { user: { name: "Macarena Peche" } }, 
+                                   headers: { "Authorization": token }
       response
     end
     let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
 
     context "when there is no logged in user" do
-      let!(:token) { nil }
-
-      it { is_expected.to have_http_status(401) }
-
-      it "returns an error" do
-        expect(JSON.parse(result.body)).to eq({
-          "errors" => "Unauthorized"
-        })
-      end
+      include_examples "no logged in user"
     end
 
     context "when trying to update another user's info" do
@@ -158,7 +151,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { put "/api/users/#{user.id}", params: { user: {name: ""} } } # UPDATE: DONE. REVIEW: If we don't send a key, it is not empty, we should send smth like { name: "" } or { name: nil } 
+      before { put "/api/users/#{user.id}", params: { user: {name: ""} }, headers: { "Authorization": token } } # UPDATE: DONE. REVIEW: If we don't send a key, it is not empty, we should send smth like { name: "" } or { name: nil } 
 
       specify { expect(response).to have_http_status(422) }
 
@@ -184,6 +177,10 @@ RSpec.describe 'Users API', type: :request do
     let!(:token) { Api::JsonWebToken.encode(user_id: user.id) } 
 
     specify { expect(result).to have_http_status(204) }
+
+    context "when there is no logged in user" do
+      include_examples "no logged in user"
+    end
 
     context "when trying to delete another user" do
       let!(:another_user) { User.create(name: "user", handle: "handle", email: "email@gmail.com", password: "password") }

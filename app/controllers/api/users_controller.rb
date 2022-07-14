@@ -1,7 +1,7 @@
 module Api
   class UsersController < ApplicationController
     before_action :set_user, only: [:show, :update, :destroy, :followers, :following]
-    before_action :authorize_request, only: [:create, :update, :destroy]
+    before_action :authorize_request, only: [:update, :destroy]
     before_action :forbidden_action, only: [:update, :destroy]
 
     def index
