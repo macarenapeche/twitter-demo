@@ -32,7 +32,7 @@ RSpec.describe 'Users API', type: :request do
 
     context "when user is logged in" do
       include_context "when user exists" 
-      let(:valid_params) { { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" }}
+      let(:valid_params) {{ user: { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } }}
       let(:headers) { { "Authorization": token } }
       let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
 
@@ -46,7 +46,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when the request is valid' do
-      let(:valid_params) { { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } }
+      let(:valid_params) {{ user: { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } }}
 
       it { is_expected.to have_http_status(201) }
 
@@ -65,7 +65,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/users', params: {} }
+      before { post '/api/users', params: { user: {name: ""}} }
 
       specify { expect(response).to have_http_status(422) }
 
@@ -114,7 +114,7 @@ RSpec.describe 'Users API', type: :request do
     include_context 'when user exists'
 
     subject(:result) do
-      put "/api/users/#{user_id}", params: { name: "Macarena Peche" }, headers: { "Authorization": token }
+      put "/api/users/#{user_id}", params: { user: { name: "Macarena Peche" } }, headers: { "Authorization": token }
       response
     end
     let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
@@ -158,7 +158,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { put "/api/users/#{user.id}", params: { name: "" } } # UPDATE: DONE. REVIEW: If we don't send a key, it is not empty, we should send smth like { name: "" } or { name: nil } 
+      before { put "/api/users/#{user.id}", params: { user: {name: ""} } } # UPDATE: DONE. REVIEW: If we don't send a key, it is not empty, we should send smth like { name: "" } or { name: nil } 
 
       specify { expect(response).to have_http_status(422) }
 

@@ -59,7 +59,8 @@ module Api
     end
 
     def user_params
-      params.permit(:name, :handle, :email, :password, :password_confirmation, :bio)
+      debugger
+      params.require(:user).permit(:name, :handle, :email, :password, :password_confirmation, :bio)
     end
 
     def forbidden_action
