@@ -59,7 +59,6 @@ module Api
     end
 
     def user_params
-      debugger
       params.require(:user).permit(:name, :handle, :email, :password, :password_confirmation, :bio)
     end
 
