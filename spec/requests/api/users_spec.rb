@@ -26,8 +26,23 @@ RSpec.describe 'Users API', type: :request do
 
   describe  'POST /api/users' do
     subject(:result) do
-      post '/api/users', params: valid_params
+      post '/api/users', params: valid_params, headers: headers
       response
+    end
+
+    context "when user is logged in" do
+      include_context "when user exists" 
+      let(:valid_params) { { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" }}
+      let(:headers) { { "Authorization": token } }
+      let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
+
+      it { is_expected.to have_http_status(401) }
+
+      it "returns an error" do
+        expect(JSON.parse(result.body)).to eq({
+          "errors" => "Users cannot be created while logged in"
+        })
+      end
     end
 
     context 'when the request is valid' do
@@ -99,8 +114,34 @@ RSpec.describe 'Users API', type: :request do
     include_context 'when user exists'
 
     subject(:result) do
-      put "/api/users/#{user_id}", params: { name: "Macarena Peche" }
+      put "/api/users/#{user_id}", params: { name: "Macarena Peche" }, headers: { "Authorization": token }
       response
+    end
+    let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
+
+    context "when there is no logged in user" do
+      let!(:token) { nil }
+
+      it { is_expected.to have_http_status(401) }
+
+      it "returns an error" do
+        expect(JSON.parse(result.body)).to eq({
+          "errors" => "Unauthorized"
+        })
+      end
+    end
+
+    context "when trying to update another user's info" do
+      let!(:another_user) { User.create(name: "user", handle: "handle", email: "email@gmail.com", password: "password") }
+      let!(:token) { Api::JsonWebToken.encode(user_id: another_user.id) }
+
+      it { is_expected.to have_http_status(401) }
+
+      it "returns an error" do
+        expect(JSON.parse(result.body)).to eq({
+          "errors" => "Unauthorized"
+        })
+      end
     end
 
     context 'when the request is valid' do
@@ -138,9 +179,24 @@ RSpec.describe 'Users API', type: :request do
 
   describe 'DELETE /api/users/:id' do
     include_context 'when user exists'
-    let!(:result) { delete "/api/users/#{user_id}"; response }
+    let!(:result) { delete "/api/users/#{user_id}", headers: headers; response }
+    let!(:headers) { { "Authorization": token }}
+    let!(:token) { Api::JsonWebToken.encode(user_id: user.id) } 
 
     specify { expect(result).to have_http_status(204) }
+
+    context "when trying to delete another user" do
+      let!(:another_user) { User.create(name: "user", handle: "handle", email: "email@gmail.com", password: "password") }
+      let!(:token) { Api::JsonWebToken.encode(user_id: another_user.id) }
+
+      specify { expect(result).to have_http_status(401) }
+
+      it "returns an error" do 
+        expect(JSON.parse(result.body)).to eq({
+          "errors"=>"Unauthorized"
+        })
+      end
+    end
 
     context 'when user does not exist' do
       include_examples 'user does not exist'

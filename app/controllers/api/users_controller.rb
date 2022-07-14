@@ -63,7 +63,7 @@ module Api
     end
 
     def forbidden_action
-      render json: { "errors": "Unathorized"}, status: :unauthorized if @current_user != @user 
+      render json: { "errors": "Unauthorized" }, status: :unauthorized if @current_user != @user 
     end
 
   end
