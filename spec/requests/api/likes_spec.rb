@@ -44,8 +44,9 @@ RSpec.describe 'Likes API' do
     end
 
     context "when there is no logged in user" do
-      include_examples "no logged in user"
       let(:valid_params) { { tweet_id: tweet.id, user_id: another_user.id } }
+
+      include_examples "no logged in user"
     end
 
     context 'when request is valid' do
@@ -97,8 +98,9 @@ RSpec.describe 'Likes API' do
     }
 
     context "when there is no logged in user" do
-      include_examples "no logged in user"
       let!(:tweet_id) { tweet.id }
+
+      include_examples "no logged in user"
     end
 
     context "when another user sends the request" do

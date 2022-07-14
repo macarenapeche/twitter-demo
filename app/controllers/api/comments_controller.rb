@@ -1,7 +1,9 @@
 module Api
   class CommentsController < ApplicationController
     before_action :get_tweet
-    before_action :set_comment, only: [:update, :destroy]
+    before_action :authorize_request, only: [:create, :update, :destroy]
+    before_action :set_comment, :forbidden_action, only: [:update, :destroy]
+
 
     def index
       @comments = @tweet.comments
@@ -41,6 +43,10 @@ module Api
   
     def comment_params
       params.permit(:content, :tweet_id, :user_id)
+    end
+
+    def forbidden_action
+      render json: { "errors": "Unauthorized" }, status: :unauthorized if @current_user.id != @comment.user_id 
     end
   end
 end
