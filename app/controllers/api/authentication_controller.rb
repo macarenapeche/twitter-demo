@@ -2,7 +2,6 @@ module Api
   class AuthenticationController < ApplicationController
     before_action :authorize_request, except: :login
 
-    
     # POST /login
     def login
       @user = User.find_by_email(login_params[:email])

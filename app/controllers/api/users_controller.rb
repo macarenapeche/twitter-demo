@@ -20,7 +20,11 @@ module Api
     end
 
     def create
-      if @current_user
+      header = request.headers['Authorization']
+      header = header.split(' ').last if header
+      decoded = JsonWebToken.decode(header) if header
+
+      if decoded && User.ids.include?(decoded[:user_id])
         render json: { "errors": "Users cannot be created while logged in"}, status: :unauthorized
       else 
         @user = User.create(user_params)

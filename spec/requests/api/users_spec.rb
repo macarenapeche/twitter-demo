@@ -30,20 +30,20 @@ RSpec.describe 'Users API', type: :request do
       response
     end
 
-    # context "when user is logged in" do
-    #   include_context "when user exists" 
-    #   let(:valid_params) {{ user: { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } }}
-    #   let(:headers) { { "Authorization": token } }
-    #   let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
+    context "when user is logged in" do
+      include_context "when user exists" 
+      let(:valid_params) {{ user: { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } }}
+      let(:headers) { { "Authorization": token } }
+      let!(:token) { Api::JsonWebToken.encode(user_id: user.id) }
 
-    #   it { is_expected.to have_http_status(401) }
+      it { is_expected.to have_http_status(401) }
 
-    #   it "returns an error" do
-    #     expect(JSON.parse(result.body)).to eq({
-    #       "errors" => "Users cannot be created while logged in"
-    #     })
-    #   end
-    # end
+      it "returns an error" do
+        expect(JSON.parse(result.body)).to eq({
+          "errors" => "Users cannot be created while logged in"
+        })
+      end
+    end
 
     context 'when the request is valid' do
       let(:valid_params) { { user: { name: "Macarena", handle: "mapeciris", email: "macarena@toptal.com", password: "password" } } }
