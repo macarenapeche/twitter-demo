@@ -19,14 +19,16 @@
   <%= form.text_field :handle %></br></br>
 
   <%= form.label :email, "Email:" %></br>
-  <%= form.password_field :email %></br></br>
-
-  <%= form.label :password_confirmation, "Retype password:" %></br>
-  <%= form.password_field :password_confirmation %></br></br>
-
+  <%= form.text_field :email %></br></br>
 
   <%= form.label :bio, "Bio:" %></br>
   <%= form.text_area :bio, size: "40x10" %></br></br>
+
+  <%= form.label :password, "Password:" %></br>
+  <%= form.password_field :password %></br></br>
+
+  <%= form.label :password_confirmation, "Retype password:" %></br>
+  <%= form.password_field :password_confirmation %></br></br>
 
   <%= form.submit %>
 <% end %>

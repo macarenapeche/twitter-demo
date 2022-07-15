@@ -1,4 +1,5 @@
 module Api
+  # REVIEW: this better be put to `app/services/json_web_token.rb`
   class JsonWebToken
     SECRET_KEY = Rails.application.secrets.secret_key_base. to_s
   

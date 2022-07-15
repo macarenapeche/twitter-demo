@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  # REVIEW: if we stop using `@current_user`, we will be able to drop this line
   before_action :current_user
 
   private

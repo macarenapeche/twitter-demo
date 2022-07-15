@@ -3,7 +3,8 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by(email: params[:email])
+    # Add downcase & strip to email to remove accidental capitals & spaces
+    user = User.find_by(email: params[:email].downcase.strip)
     if user.present? && user.authenticate(params[:password])
       session[:user_id] = user.id
       redirect_to root_path, notice: 'Logged in successfully'
