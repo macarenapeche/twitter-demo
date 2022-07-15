@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :followers, :following]
+  # before_action :require_auth
 
   def index
     @users = User.all
@@ -11,6 +12,7 @@ class UsersController < ApplicationController
   def new
     if @current_user 
       flash[:notice] = "You cannot create a new user while logged in"
+      # REVIEW: when we do redirects, we do not put error statuses 'cause then browser won't redirect.
       redirect_to root_path, status: :forbidden
     else 
       @user = User.new
@@ -19,9 +21,10 @@ class UsersController < ApplicationController
   end
 
   def edit
+    # REVIEW: instead of `@current_user` everywhere, we should rather use the method `current_user`
     if @current_user != @user 
       flash[:notice] = "You cannot update another user's information"
-      redirect_to @user, status: :forbidden
+      redirect_to @user
     end
   end
 
@@ -39,7 +42,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @current_user != @user 
+    if @current_user != @user
       redirect_to @user, status: :forbidden
     elsif @user.update(user_params)
       flash[:notice] = "User successfully updated"
@@ -78,4 +81,14 @@ class UsersController < ApplicationController
     params.require(:user).permit(:name, :handle, :email, :password, :password_confirmation, :bio)
   end
 
+  def require_auth
+    # REVIEW:
+    # if @current_user != @user
+    #   case action_name
+    #   when "edit"
+    #     flash[:notice] = "You cannot update another user's information"
+    #     redirect_to @user
+    #   end
+    # end
+  end
 end

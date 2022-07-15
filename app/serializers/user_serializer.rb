@@ -1,4 +1,5 @@
 class UserSerializer < ActiveModel::Serializer 
+  # REVIEW: password_digest is a BIG secret, we don't expose it
   attributes :id, :name, :handle, :email, :password_digest, :bio, :created_at, :updated_at
 
   has_many :tweets

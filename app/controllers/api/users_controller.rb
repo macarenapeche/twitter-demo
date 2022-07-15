@@ -1,6 +1,7 @@
 module Api
   class UsersController < ApplicationController
     before_action :set_user, only: [:show, :update, :destroy, :followers, :following]
+    # REVIEW: seems we can unite those two lines 👇
     before_action :authorize_request, only: [:update, :destroy]
     before_action :forbidden_action, only: [:update, :destroy]
 
@@ -24,6 +25,8 @@ module Api
       header = header.split(' ').last if header
       decoded = JsonWebToken.decode(header) if header
 
+      # REVIEW: User.ids.include? loads all the ids to the RAM. We should rather do User.where(id: decoded[:user_id]).exists?
+      # But actually we could just check `current_user.present?` with the latest changes
       if decoded && User.ids.include?(decoded[:user_id])
         render json: { "errors": "Users cannot be created while logged in"}, status: :unauthorized
       else 
@@ -69,6 +72,5 @@ module Api
     def forbidden_action
       render json: { "errors": "Unauthorized" }, status: :unauthorized if @current_user != @user 
     end
-
   end
 end
