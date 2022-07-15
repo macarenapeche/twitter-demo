@@ -1,5 +1,6 @@
 module Api
-  class LikesController < ApplicationController
+  class LikesController < ApplicationController 
+    # REVIEW: these `get_` methods are rather `set_` :) 
     before_action :get_tweet
     before_action :authorize_request, only: [:create, :destroy]
     before_action :get_like, :forbidden_action, only: [:destroy]

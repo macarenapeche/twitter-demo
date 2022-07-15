@@ -11,6 +11,7 @@ module Types
     field :tweetCount, Integer, null: false
     field :followersCount, Integer, null: false
     field :followingCount, Integer, null: false
+    field :current, Boolean, null: false
 
     def tweetCount
       object.tweets.count
@@ -22,6 +23,10 @@ module Types
 
     def followingCount
       object.following.count
+    end
+
+    def current
+      object == context[:current_user]
     end
   end
 end
