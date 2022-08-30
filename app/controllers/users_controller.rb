@@ -32,10 +32,10 @@ class UsersController < ApplicationController
   def create
     if @current_user 
       redirect_to root_path, status: :forbidden
-    elsif @user = User.new(user_params) && @user.save
+    elsif user = User.create(user_params)
       flash[:notice] = "User successfully created"
-      session[:user_id] = @user.id
-      redirect_to @user
+      session[:user_id] = user.id
+      redirect_to user
     else
       render 'new'
     end
